@@ -9,12 +9,16 @@ public class CommandConfigReload implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        TrueDiscordLink.getInstance().reloadConfig();
-        TrueDiscordLink.getInstance().getPlayerChatHandler().reset();
-        TrueDiscordLink.getInstance().getDiscordChatHandler().reset();
+        // Reload Config & Clear Cache
+        TrueDiscordLink instance = TrueDiscordLink.getInstance();
+        instance.reloadConfig();
+        instance.getPlayerChatListener().reset();
+        instance.getDiscordChatListener().reset();
+
+        // Send Notification Message
         sender.sendMessage("Config reloaded!");
 
-        // The command always works as expected
+        // Return True as Command Always Works
         return true;
     }
 

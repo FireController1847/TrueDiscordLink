@@ -1,17 +1,20 @@
 package com.visualfiredev.truediscordlink.commands;
 
+import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
+
 public class CommandTrueDiscordLink implements CommandExecutor {
 
-    // Handle Command Execution
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Base Command
+
+        // Main Command
         if (args.length == 0) {
-            return false; // Return false; TODO: Somehow make this show the help page for it...
+            return false; // TODO: Return list of commands :)
 
         // Reload Command
         } else if (args[0].equalsIgnoreCase("reload")) {

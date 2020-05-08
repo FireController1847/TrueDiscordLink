@@ -4,54 +4,45 @@
 # IF YOU MAKE A MISTAKE IN CONFIGURATION, WE WILL NOT BABY YOU THROUGH FIGURING IT OUT.   #
 ###########################################################################################
 
-############################
-#     Discord Messages     #
-############################
-messaging:
-  # Enable webhook usage.
-  # - Allows for user's avatars and usernames to become more natural in chat.
-  # - Is much more cozy and provides seamless integration with Discord.
-  # - You can use multiple webhooks to send messages in multiple places.
-  # - Webhooks cannot receive messages. If you would like that functionality, please use this in combination with a bot.
-  use_webhooks: true
+####################
+#     Webhooks     #
+####################
+# Webhooks can only be used for relaying messages. They cannot be used to receive messages.
+webhooks:
 
-  # Enable bot usage.
-  # - This will use the bot to send concurrent messages from your server.
-  # - It's less interactive and can cause more confusion, but is much more compact.
-  # - There can only be one.
-  # - Can receive messages to relay them back to your server.
-  use_bot: false
+  # Whether or not webhooks should be enabled.
+  enabled: true
 
-  # The token for the bot you'd like to use.
-  # - You'll only have a bot token if use_bot is enabled and you've created one.
-  # - If you do not know how to make a bot, there are plenty of tutorials out there. Please Google it.
-  bot_token: "INSERT_TOKEN_HERE"
-
-  # The URL to use for Minecraft skins.
-  # - %uuid is replaced with the user's uuid.
-  skins_url: https://minotar.net/helm/%uuid/2048
-
-  # Enables relaying Minecraft chat messages to Discord.
-  # - Requires use_webhooks or use_bot to be true, otherwise this does nothing.
-  # - Allows to easily toggle sending of
-  enable_chat_relay: true
-
-  # The channels that should receive messages from the Minecraft server.
-  # - Only used if use_bot is enabled and should relay messages.
-  # - Keep this empty if you do not want the Discord bot relaying messages, but only webhooks.
-  relay_channels:
-    - 000000000000000000
-
-  # A list of URLs to send messages to via webhooks.
-  # - The following is a tutorial on how to create a webhook: https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
-  relay_webhooks:
+  # A list of webhooks to send messages to
+  urls:
     - https://discord.com/webhook1
 
-  # Enables receiving Discord messages into Minecraft.
-  # - You can only use this if you have use_bot enabled.
-  enable_chat_recieve: true
+  # Whether or not to use the player's skin as the avatar for the webhook
+  use_avatar: true
 
-  # The channels that should relay messages to the Minecraft server.
-  # - You can only use this if you have use_bot enabled.
+  # The URL that should be used for providing the skins to the webhook for each user.
+  # %uuid is replaced with the user's uuid.
+  skins_url: https://minotar.net/helm/%uuid/2048
+
+###############
+#     Bot     #
+###############
+# Bots can be used for both relaying and receiving messages.
+# They can also be used to provide other information about the server in unique ways.
+bot:
+
+  # Whether or not the usage of a bot is enabled.
+  enabled: true
+
+  # The token of the bot that should be used
+  token: "INSERT_TOKEN_HERE"
+
+  # A list of channel ids that should receive messages from the Minecraft server.
+  # Leave blank to disable sending messages via the bot.
   receive_channels:
+    - 000000000000000000
+
+  # A list of channel ids that should relay messages to the Minecraft server.
+  # Leave blank to disable receiving messages via the bot. Useful if you want to use webhooks in combination with a bot.
+  relay_channels:
     - 000000000000000000
