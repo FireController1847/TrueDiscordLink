@@ -15,3 +15,4 @@ commands:
 
 api-version: "1.15"
 main: com.visualfiredev.truediscordlink.TrueDiscordLink
+load: POSTWORLD

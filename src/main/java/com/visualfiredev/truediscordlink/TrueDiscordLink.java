@@ -11,6 +11,7 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class TrueDiscordLink extends JavaPlugin {
 
@@ -58,6 +59,12 @@ public class TrueDiscordLink extends JavaPlugin {
         // Log out of Discord
         discord.removeListener(discordChatHandler);
         discord.disconnect();
+        try {
+            discord.getThreadPool().getExecutorService().awaitTermination(5, TimeUnit.SECONDS);
+            discord = null;
+        } catch (InterruptedException e) {
+            // It's not the end of the world, I suppose
+        }
 
         // Log Disabled
         this.getLogger().info("TrueDiscordLink disabled!");
@@ -79,11 +86,13 @@ public class TrueDiscordLink extends JavaPlugin {
             // Login
             this.getLogger().info("Discord bot logging in!");
             new DiscordApiBuilder().setToken(token).login().thenAcceptAsync(api -> {
-                discord = api;
 
                 // Event Listeners
                 discordChatHandler = new DiscordChatHandler();
                 api.addListener(discordChatHandler);
+
+                // Assign to Variable
+                discord = api;
 
                 this.getLogger().info("Discord bot ready!");
             }).exceptionally(ExceptionLogger.get());
