@@ -3,11 +3,14 @@ package com.visualfiredev.truediscordlink;
 import com.visualfiredev.truediscordlink.commands.CommandTrueDiscordLink;
 import com.visualfiredev.truediscordlink.listeners.DiscordChatListener;
 import com.visualfiredev.truediscordlink.listeners.PlayerChatListener;
+import com.visualfiredev.truediscordlink.listeners.PlayerJoinListener;
+import com.visualfiredev.truediscordlink.listeners.PlayerQuitListener;
 import com.visualfiredev.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -28,6 +31,7 @@ public class TrueDiscordLink extends JavaPlugin {
     // Instance Variables
     private FileConfiguration lang;
     private DiscordApi discord;
+    private DiscordManager manager;
     private PlayerChatListener playerChatListener;
     private DiscordChatListener discordChatListener;
 
@@ -41,15 +45,17 @@ public class TrueDiscordLink extends JavaPlugin {
         this.saveDefaultConfig();
         this.loadLangConfig();
 
-
         // Register Executors & Tab Completers
         PluginCommand cmdTrueDiscordLink = Objects.requireNonNull(this.getCommand("truediscordlink"));
         cmdTrueDiscordLink.setExecutor(new CommandTrueDiscordLink());
         cmdTrueDiscordLink.setTabCompleter(new TabCompleterTrueDiscordLink());
 
         // Register Event Listeners
+        PluginManager pluginManager = this.getServer().getPluginManager();
         playerChatListener = new PlayerChatListener(this);
-        this.getServer().getPluginManager().registerEvents(playerChatListener, this);
+        pluginManager.registerEvents(playerChatListener, this);
+        pluginManager.registerEvents(new PlayerJoinListener(this), this);
+        pluginManager.registerEvents(new PlayerQuitListener(this), this);
 
         // Login to Discord
         if (this.getConfig().getBoolean("bot.enabled")) {
@@ -71,6 +77,9 @@ public class TrueDiscordLink extends JavaPlugin {
                 this.getLogger().info("Logged in!");
             }).exceptionally(ExceptionLogger.get());
         }
+
+        // Make Discord Manager
+        manager = new DiscordManager(this);
 
         // Output Plugin Enabled
         this.getLogger().info("TrueDiscordLink enabled!");
@@ -155,6 +164,9 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public FileConfiguration getLangConfig() {
         return lang;
+    }
+    public DiscordManager getDiscordManager() {
+        return manager;
     }
     public DiscordApi getDiscord() {
         return discord;

@@ -24,3 +24,6 @@ messages:
   receive_format: "%prefix <%nickname> %message"
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
+events:
+  player_join: "**%name has joined the game!**"
+  player_quit: "**%name has left the game!**"

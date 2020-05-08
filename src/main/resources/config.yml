@@ -37,6 +37,7 @@ webhooks:
 bot:
 
   # Whether or not the usage of a bot is enabled.
+  # This value will not change until this server is restarted.
   enabled: true
 
   # The token of the bot that should be used
@@ -51,3 +52,12 @@ bot:
   # Leave blank to disable receiving messages via the bot. Useful if you want to use webhooks in combination with a bot.
   relay_channels:
     - 000000000000000000
+
+###########################
+#     System Messages     #
+###########################
+# Messages that will send on the following events. Messages configurable in lang file.
+# Set to false to disable the messages from sending.
+events:
+  player_join: true
+  player_quit: true

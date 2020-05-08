@@ -13,7 +13,7 @@ public class CommandConfigReload implements CommandExecutor {
         // Reload Config & Clear Cache
         TrueDiscordLink instance = TrueDiscordLink.getInstance();
         instance.reloadConfig();
-        instance.getPlayerChatListener().reset();
+        instance.getDiscordManager().reset();
         instance.getDiscordChatListener().reset();
         instance.loadLangConfig();
 
