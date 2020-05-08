@@ -1,0 +1,17 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: FireController#1847
+website: https://www.visualfiredev.com/
+
+commands:
+  truediscordlink:
+    description: Lists all of the available commands for the plugin
+    usage: /truediscordlink
+    aliases: [truediscord,discord,tdl]
+  truediscordlink reload:
+    description: Reloads the configuration files
+    usage: /truediscordlink reload
+
+api-version: "1.15"
+main: com.visualfiredev.truediscordlink.TrueDiscordLink
