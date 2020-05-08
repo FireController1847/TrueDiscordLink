@@ -1,10 +1,7 @@
 package com.visualfiredev.truediscordlink;
 
 import com.visualfiredev.truediscordlink.commands.CommandTrueDiscordLink;
-import com.visualfiredev.truediscordlink.listeners.DiscordChatListener;
-import com.visualfiredev.truediscordlink.listeners.PlayerChatListener;
-import com.visualfiredev.truediscordlink.listeners.PlayerJoinListener;
-import com.visualfiredev.truediscordlink.listeners.PlayerQuitListener;
+import com.visualfiredev.truediscordlink.listeners.*;
 import com.visualfiredev.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -56,6 +53,7 @@ public class TrueDiscordLink extends JavaPlugin {
         pluginManager.registerEvents(playerChatListener, this);
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        pluginManager.registerEvents(new PlayerDeathListener(this), this);
 
         // Login to Discord
         if (this.getConfig().getBoolean("bot.enabled")) {

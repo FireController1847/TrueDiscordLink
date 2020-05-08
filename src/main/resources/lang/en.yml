@@ -27,3 +27,4 @@ messages:
 events:
   player_join: "**%name has joined the game!**"
   player_quit: "**%name has left the game!**"
+  player_death: "**%player %message**"

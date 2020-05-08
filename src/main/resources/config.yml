@@ -61,3 +61,4 @@ bot:
 events:
   player_join: true
   player_quit: true
+  player_death: true
