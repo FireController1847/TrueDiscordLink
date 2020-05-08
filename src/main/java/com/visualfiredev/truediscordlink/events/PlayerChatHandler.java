@@ -1,4 +1,4 @@
-package com.visualfiredev.truediscordlink.discord;
+package com.visualfiredev.truediscordlink.events;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -17,8 +17,9 @@ import java.util.List;
 public class PlayerChatHandler implements Listener {
 
     // Instance Variables
-    private TrueDiscordLink discordlink;
+    private final TrueDiscordLink discordlink;
     private List<String> webhooks;
+    private List<Long> channelIds;
     private String skinsUrl;
 
     // Constructor
@@ -38,7 +39,7 @@ public class PlayerChatHandler implements Listener {
         Player player = event.getPlayer();
         String username = player.getName();
 
-        // Check if Webhooks Are Enabled & Do That
+        // Check if webhooks are enabled and use them
         if (discordlink.getConfig().getBoolean("messaging.use_webhooks")) {
             // Load the required URLs for webhooks
             if ((webhooks == null || skinsUrl == null) && !loadUrls()) {
@@ -51,6 +52,21 @@ public class PlayerChatHandler implements Listener {
             // Send Web Request
             for (String webhook : webhooks) {
                 sendWebhookMessage(event.getMessage(), username, skin, webhook);
+            }
+        }
+
+        // Check if the bot is enabled
+        if (discordlink.getConfig().getBoolean("messaging.use_bot") && discordlink.getDiscord() != null) {
+            if ((channelIds == null && !loadChannels()) || channelIds.size() == 0) {
+                return;
+            }
+
+            for (long channelId : channelIds) {
+                discordlink.getDiscord().getChannelById(channelId).ifPresent(channel -> {
+                    channel.asTextChannel().ifPresent(textChannel -> {
+                        textChannel.sendMessage("**" + player.getName() + "** >> " + event.getMessage()); // TODO: Allow message formatting to be changed
+                    });
+                });
             }
         }
     }
@@ -121,10 +137,17 @@ public class PlayerChatHandler implements Listener {
         return true;
     }
 
+    // Initiates the main channels needed for the Discord bot to work
+    public boolean loadChannels() {
+        channelIds = discordlink.getConfig().getLongList("messaging.relay_channels");
+        return true;
+    }
+
     // Resets all of the nessecary information for a configuration reload
     public void reset() {
         webhooks = null;
         skinsUrl = null;
+        channelIds = null;
     }
 
 }

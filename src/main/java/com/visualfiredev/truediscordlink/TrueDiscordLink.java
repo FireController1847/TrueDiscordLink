@@ -1,9 +1,14 @@
 package com.visualfiredev.truediscordlink;
 
 import com.visualfiredev.truediscordlink.commands.CommandTrueDiscordLink;
-import com.visualfiredev.truediscordlink.discord.PlayerChatHandler;
+import com.visualfiredev.truediscordlink.events.DiscordChatHandler;
+import com.visualfiredev.truediscordlink.events.PlayerChatHandler;
 import com.visualfiredev.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.javacord.api.DiscordApi;
+import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.util.logging.ExceptionLogger;
 
 import java.util.Objects;
 
@@ -13,7 +18,9 @@ public class TrueDiscordLink extends JavaPlugin {
     private static TrueDiscordLink instance;
 
     // Instance Variables
-    private PlayerChatHandler playerChatHandler;
+    private DiscordApi discord;
+    private PlayerChatHandler playerChatHandler; // Player Chat Handler
+    private DiscordChatHandler discordChatHandler; // Discord Chat Handler
 
     // Plugin Enabled Handler
     @Override
@@ -38,6 +45,9 @@ public class TrueDiscordLink extends JavaPlugin {
         playerChatHandler = new PlayerChatHandler();
         this.getServer().getPluginManager().registerEvents(playerChatHandler, this);
 
+        // Bot Login
+        loginToDiscord();
+
         // Log Enabled
         this.getLogger().info("TrueDiscordLink enabled!");
     }
@@ -45,8 +55,39 @@ public class TrueDiscordLink extends JavaPlugin {
     // Plugin Disabled Handler
     @Override
     public void onDisable() {
+        // Log out of Discord
+        discord.removeListener(discordChatHandler);
+        discord.disconnect();
+
         // Log Disabled
         this.getLogger().info("TrueDiscordLink disabled!");
+    }
+
+
+    // Logs In to Discord
+    private void loginToDiscord() {
+        // Check if enabled
+        if (this.getConfig().getBoolean("messaging.use_bot")) {
+
+            // Fetch token
+            String token = this.getConfig().getString("messaging.bot_token");
+            if (token == null) {
+                (new InvalidConfigurationException("Invalid bot token but use_bot is enabled!")).printStackTrace();
+                return;
+            }
+
+            // Login
+            this.getLogger().info("Discord bot logging in!");
+            new DiscordApiBuilder().setToken(token).login().thenAcceptAsync(api -> {
+                discord = api;
+
+                // Event Listeners
+                discordChatHandler = new DiscordChatHandler();
+                api.addListener(discordChatHandler);
+
+                this.getLogger().info("Discord bot ready!");
+            }).exceptionally(ExceptionLogger.get());
+        }
     }
 
     // Getters
@@ -55,6 +96,12 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public PlayerChatHandler getPlayerChatHandler() {
         return playerChatHandler;
+    }
+    public DiscordChatHandler getDiscordChatHandler() {
+        return discordChatHandler;
+    }
+    public DiscordApi getDiscord() {
+        return discord;
     }
 
 }
