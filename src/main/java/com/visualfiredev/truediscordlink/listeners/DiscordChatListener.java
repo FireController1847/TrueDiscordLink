@@ -1,6 +1,7 @@
 package com.visualfiredev.truediscordlink.listeners;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -38,7 +39,15 @@ public class DiscordChatListener implements MessageCreateListener {
             // Check for Channel & Send Message
             int index = channelIds.indexOf(event.getChannel().getId());
             if (index != -1) {
-                discordLink.getServer().broadcastMessage("<[D] " + event.getMessageAuthor().getDisplayName() + "> " + event.getMessageContent()); // TODO: LANG
+                discordLink.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',
+                    discordLink.getLangString("messages.receive_format",
+                        new String[] { "%username", event.getMessageAuthor().getName() },
+                        new String[] { "%nickname", event.getMessageAuthor().getDisplayName() },
+                        new String[] { "%discriminator", event.getMessageAuthor().getDiscriminator().toString() },
+                        new String[] { "%id", event.getMessageAuthor().getIdAsString() },
+                        new String[] { "%message", event.getMessageContent() }
+                    )
+                ));
             }
 
         }
@@ -59,6 +68,7 @@ public class DiscordChatListener implements MessageCreateListener {
 
     // Configuration Cache Reset
     public void reset() {
+        channelIds = null;
         initialized = false;
     }
 

@@ -6,11 +6,17 @@ import com.visualfiredev.truediscordlink.listeners.PlayerChatListener;
 import com.visualfiredev.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.util.logging.ExceptionLogger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +26,7 @@ public class TrueDiscordLink extends JavaPlugin {
     private static TrueDiscordLink instance;
 
     // Instance Variables
+    private FileConfiguration lang;
     private DiscordApi discord;
     private PlayerChatListener playerChatListener;
     private DiscordChatListener discordChatListener;
@@ -30,8 +37,10 @@ public class TrueDiscordLink extends JavaPlugin {
         // Set Instance
         instance = this;
 
-        // Configuration Setup
+        // Configuration Setup (LANG)
         this.saveDefaultConfig();
+        this.loadLangConfig();
+
 
         // Register Executors & Tab Completers
         PluginCommand cmdTrueDiscordLink = Objects.requireNonNull(this.getCommand("truediscordlink"));
@@ -84,6 +93,56 @@ public class TrueDiscordLink extends JavaPlugin {
         this.getLogger().info("TrueDiscordLink disabled!");
     }
 
+    // Load Language File
+    public void loadLangConfig() {
+        try {
+            String langString = this.getConfig().getString("lang");
+            Path langConfigPath = Paths.get(this.getDataFolder() + "/lang/" + langString + ".yml");
+            Files.createDirectories(langConfigPath.getParent());
+            if (!Files.exists(langConfigPath)) {
+                try {
+                    this.saveResource("lang/" + langString + ".yml", false);
+                } catch (IllegalArgumentException e) {
+                    (new InvalidConfigurationException("Invalid language file! Using default en.yml")).printStackTrace();
+                    langConfigPath = Paths.get(this.getDataFolder() + "/lang/en.yml");
+                    this.saveResource("lang/en.yml", false);
+                }
+            }
+
+            lang = new YamlConfiguration();
+            lang.load(langConfigPath.toFile());
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Language Get String
+    public final String getLangString(String key, String[]... arguments) throws NullPointerException {
+        // Fetch Value
+        String value = lang.getString(key);
+        if (value == null) {
+            throw new NullPointerException("Lang key cannot be null!");
+        }
+
+        // Fetch Prefix
+        String prefix = lang.getString("prefix");
+        if (prefix == null) {
+            prefix = "[Discord] ";
+        }
+
+        // Replace Arguments
+        if (arguments != null) {
+            for (String[] argument : arguments) {
+                value = value.replace(argument[0], argument[1]);
+            }
+        }
+
+        return value.replace("%prefix", prefix);
+    }
+    public final String getLangString(String key) {
+        return this.getLangString(key, null);
+    }
+
     // Getters
     public static TrueDiscordLink getInstance() {
         return instance;
@@ -93,6 +152,9 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public DiscordChatListener getDiscordChatListener() {
         return discordChatListener;
+    }
+    public FileConfiguration getLangConfig() {
+        return lang;
     }
     public DiscordApi getDiscord() {
         return discord;

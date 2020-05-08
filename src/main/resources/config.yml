@@ -5,6 +5,11 @@
 ###########################################################################################
 
 ####################
+#     Language     #
+####################
+lang: en
+
+####################
 #     Webhooks     #
 ####################
 # Webhooks can only be used for relaying messages. They cannot be used to receive messages.

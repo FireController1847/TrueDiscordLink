@@ -1,0 +1,26 @@
+# Valid Arguments:
+# GENERIC:
+# - %prefix: The prefix of the plugin
+# - %message: The content of the message
+#
+# MINECRAFT:
+# - %name: The name of a Minecraft user
+# - %displayname: The display name (including prefix & colors) of a Minecraft user
+# - %uuid: The UUID of a Minecraft user
+#
+# DISCORD:
+# - %username: The username of a Discord user
+# - %nickname: The nickname of a Discord user
+# - %discriminator: The discriminator of a Discord user
+# - %id: The ID of a Discord user
+
+# Not all arguments work for every item.
+# Colors are accepted!
+
+prefix: "[&bDiscordLink&r]"
+config:
+  reloaded: "%prefix Configuration reloaded!"
+messages:
+  receive_format: "%prefix <%nickname> %message"
+  webhook_relay_format: "%message"
+  bot_relay_format: "**%name** >> %message"

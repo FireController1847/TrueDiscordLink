@@ -1,9 +1,9 @@
 package com.visualfiredev.truediscordlink.listeners;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class PlayerChatListener implements Listener {
@@ -49,7 +50,14 @@ public class PlayerChatListener implements Listener {
 
             // Send Message
             for (String webhookUrl : webhookUrls) {
-                sendWebhookMessage(event.getMessage(), event.getPlayer().getName(), skin, webhookUrl);
+                sendWebhookMessage(ChatColor.translateAlternateColorCodes('&',
+                    discordlink.getLangString("messages.webhook_relay_format",
+                        new String[] { "%name", event.getPlayer().getName() },
+                        new String[] { "%displayname", event.getPlayer().getDisplayName() },
+                        new String[] { "%uuid", event.getPlayer().getUniqueId().toString() },
+                        new String[] { "%message", event.getMessage() }
+                    )
+                ), event.getPlayer().getName(), skin, webhookUrl);
             }
 
         }
@@ -60,7 +68,14 @@ public class PlayerChatListener implements Listener {
             // Find Channel & Send Message
             for (long channelId : channelIds) {
                 discordlink.getDiscord().getTextChannelById(channelId).ifPresent(channel -> {
-                    channel.sendMessage("**" + event.getPlayer().getName() + "** >> " + event.getMessage()); // TODO: LANG
+                    channel.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        discordlink.getLangString("messages.bot_relay_format",
+                            new String[] { "%name", event.getPlayer().getName() },
+                            new String[] { "%displayname", event.getPlayer().getDisplayName() },
+                            new String[] { "%uuid", event.getPlayer().getUniqueId().toString() },
+                            new String[] { "%message", event.getMessage() }
+                        )
+                    ));
                 });
             }
 
@@ -78,15 +93,15 @@ public class PlayerChatListener implements Listener {
             // Make JSON Data
             byte[] data;
             if (skin != null) {
-                data = ("{\"content\": \"" + content.replace("\"", "\\\"") + "\", \"username\": \"" + username + "\", \"avatar_url\": \"" + skin + "\"}").getBytes();
+                data = ("{\"content\": \"" + content.replace("\"", "\\\"") + "\", \"username\": \"" + username + "\", \"avatar_url\": \"" + skin + "\"}").getBytes(StandardCharsets.ISO_8859_1);
             } else {
-                data = ("{\"content\": \"" + content.replace("\"", "\\\"") + "\", \"username\": \"" + username + "\"}").getBytes();
+                data = ("{\"content\": \"" + content.replace("\"", "\\\"") + "\", \"username\": \"" + username + "\"}").getBytes(StandardCharsets.ISO_8859_1);
             }
             int length = data.length;
 
             // Add Data & Make Request
             connection.setFixedLengthStreamingMode(length);
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setRequestProperty("Content-Type", "application/json; charset=ISO_8859_1");
             connection.connect();
             try (OutputStream stream = connection.getOutputStream()) {
                 stream.write(data);
@@ -154,6 +169,10 @@ public class PlayerChatListener implements Listener {
 
     // Configuration Cache Reset
     public void reset() {
+        webhookUrls = null;
+        channelIds = null;
+        skinsUrl = null;
+        useAvatar = false;
         initialized = false;
     }
 
