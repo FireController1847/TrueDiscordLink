@@ -24,6 +24,8 @@ config:
   reloaded: "%prefix Configuration reloaded!"
 messages:
   receive_format: "%prefix <%nickname> %message"
+  receive_attachment_format: "%prefix <%nickname> &9&n%message"
+  receive_attachment_placeholder: "&9&nOpen Attachment"
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
 events:
