@@ -59,6 +59,8 @@ bot:
 # Messages that will send on the following events. Messages configurable in lang file.
 # Set to false to disable the messages from sending.
 events:
+  server_start: true
+  server_shutdown: true
   player_join: true
   player_quit: true
   player_death: true

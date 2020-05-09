@@ -59,6 +59,9 @@ public class TrueDiscordLink extends JavaPlugin {
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerAdvancementDoneListener(this), this);
 
+        // Make Discord Manager
+        manager = new DiscordManager(this);
+
         // Login to Discord
         if (this.getConfig().getBoolean("bot.enabled")) {
             // Fetch Bot Token
@@ -77,11 +80,18 @@ public class TrueDiscordLink extends JavaPlugin {
                 // Assign to Variable & Output Login Status
                 discord = api;
                 this.getLogger().info("Logged in!");
-            }).exceptionally(ExceptionLogger.get());
-        }
 
-        // Make Discord Manager
-        manager = new DiscordManager(this);
+                // Send Server Started Message
+                if (this.getConfig().getBoolean("events.server_start")) {
+                    manager.sendDiscordMessage(getLangString("events.server_start"));
+                }
+            }).exceptionally(ExceptionLogger.get());
+        } else {
+            // Send Server Started Message
+            if (this.getConfig().getBoolean("events.server_start")) {
+                manager.sendDiscordMessage(getLangString("events.server_start"));
+            }
+        }
 
         // Output Plugin Enabled
         this.getLogger().info("TrueDiscordLink enabled!");
@@ -90,14 +100,21 @@ public class TrueDiscordLink extends JavaPlugin {
     // Plugin Disable Listener
     @Override
     public void onDisable() {
+        // Send Shutdown Message
+        if (this.getConfig().getBoolean("events.server_shutdown")) {
+            manager.sendDiscordMessage(getLangString("events.server_shutdown"), true);
+        }
+
         // Remove Discord Event Listeners & Log Out
-        discord.removeListener(discordChatListener);
-        discord.disconnect();
-        try {
-            discord.getThreadPool().getExecutorService().awaitTermination(5, TimeUnit.SECONDS);
-            discord = null;
-        } catch (InterruptedException e) {
-            // It's not the end of the world, I suppose
+        if (discord != null) {
+            discord.removeListener(discordChatListener);
+            discord.disconnect();
+            try {
+                discord.getThreadPool().getExecutorService().awaitTermination(5, TimeUnit.SECONDS);
+                discord = null;
+            } catch (InterruptedException e) {
+                // It's not the end of the world, I suppose
+            }
         }
 
         // Output Plugin Disabled

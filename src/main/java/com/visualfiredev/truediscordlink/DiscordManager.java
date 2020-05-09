@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.javacord.api.entity.message.Message;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class DiscordManager {
 
@@ -30,7 +32,7 @@ public class DiscordManager {
     }
 
     // Send message function
-    public void sendDiscordMessage(String content, Player player) {
+    public void sendDiscordMessage(String content, boolean blocking, Player player) {
         // Load Configuration
         if (!initialized && !initialize()) {
             return;
@@ -64,13 +66,13 @@ public class DiscordManager {
         }
 
         // Bot
-        if (channelIds != null && channelIds.size() > 0) {
+        if (channelIds != null && channelIds.size() > 0 && discordlink.getDiscord() != null) {
 
             // Find Channel & Send Message
             for (long channelId : channelIds) {
                 discordlink.getDiscord().getTextChannelById(channelId).ifPresent(channel -> {
                     if (player != null) {
-                        channel.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                 discordlink.getLangString("messages.bot_relay_format",
                                         new String[] { "%name", player.getName() },
                                         new String[] { "%displayname", player.getDisplayName() },
@@ -78,8 +80,14 @@ public class DiscordManager {
                                         new String[] { "%message", content }
                                 )
                         ));
+                        if (blocking) {
+                            future.join();
+                        }
                     } else {
-                        channel.sendMessage(ChatColor.translateAlternateColorCodes('&', content));
+                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&', content));
+                        if (blocking) {
+                            future.join();
+                        }
                     }
                 });
             }
@@ -87,8 +95,14 @@ public class DiscordManager {
         }
 
     }
+    public void sendDiscordMessage(String content, Player player) {
+        this.sendDiscordMessage(content, false, player);
+    }
+    public void sendDiscordMessage(String content, boolean blocking) {
+        this.sendDiscordMessage(content, blocking, null);
+    }
     public void sendDiscordMessage(String content) {
-        this.sendDiscordMessage(content, null);
+        this.sendDiscordMessage(content, false, null);
     }
 
     // Sends a message via a webhook

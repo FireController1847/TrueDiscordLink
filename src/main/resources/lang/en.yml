@@ -29,6 +29,8 @@ messages:
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
 events:
+  server_start: "**The server has started! :green_circle:**"
+  server_shutdown: "**The server has been shut down! :red_circle:**"
   player_join: "**%name has joined the game!**"
   player_quit: "**%name has left the game!**"
   player_death: "**%message**"
