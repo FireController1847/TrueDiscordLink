@@ -20,6 +20,7 @@
 # Colors are accepted!
 
 prefix: "[&bDiscordLink&r]"
+no_permission: "&cYou do not have permission to run this command!"
 config:
   reloaded: "%prefix Configuration reloaded!"
 messages:

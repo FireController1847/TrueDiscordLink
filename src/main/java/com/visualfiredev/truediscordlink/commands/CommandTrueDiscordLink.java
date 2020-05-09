@@ -1,11 +1,8 @@
 package com.visualfiredev.truediscordlink.commands;
 
-import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.util.Arrays;
 
 public class CommandTrueDiscordLink implements CommandExecutor {
 
@@ -14,10 +11,20 @@ public class CommandTrueDiscordLink implements CommandExecutor {
 
         // Main Command
         if (args.length == 0) {
+            if (!CommandUtil.hasPermission(sender, "truediscordlink.discord")) {
+                CommandUtil.tellNoPermission(sender);
+                return true;
+            }
+
             return false; // TODO: Return list of commands :)
 
         // Reload Command
         } else if (args[0].equalsIgnoreCase("reload")) {
+            if (!CommandUtil.hasPermission(sender, "truediscordlink.reload")) {
+                CommandUtil.tellNoPermission(sender);
+                return true;
+            }
+
             return (new CommandConfigReload()).onCommand(sender, command, label, args);
         }
 

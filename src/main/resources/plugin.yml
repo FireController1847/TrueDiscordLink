@@ -9,9 +9,25 @@ commands:
     description: Lists all of the available commands for the plugin
     usage: /truediscordlink
     aliases: [truediscord,discord,tdl]
+    permission: truediscordlink.discord
   truediscordlink reload:
     description: Reloads the configuration files
     usage: /truediscordlink reload
+    permission: truediscordlink.reload
+
+permissions:
+  truediscordlink.*:
+    description: Gives permission to all TrueDiscordLink commands
+    default: op
+    children:
+      truediscordlink.discord: true
+      truediscordlink.reload: true
+  truediscordlink.discord:
+    description: Gives permission to the main command
+    default: true
+  truediscordlink.reload:
+    description: Gives permission to the reload command
+    default: op
 
 api-version: "1.15"
 main: com.visualfiredev.truediscordlink.TrueDiscordLink
