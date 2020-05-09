@@ -65,3 +65,27 @@ events:
   player_quit: true
   player_death: true
   player_advance: true
+
+###################
+#     Tagging     #
+###################
+tagging:
+  # Whether or not to filter out ANY phrases starting with @ (pevents any mentions in Discord)
+  enable_tagging: true
+
+  # Whether or not to filter out any role tags (@&)
+  enable_role_tagging: false
+
+  # Whether or not to filter out @here and @everyone
+  enable_everyone_tagging: false
+
+  # Whether or not to make a noise when a Minecraft user's username is said in Discord
+  ping_on_mention: true
+
+  # Whether or not to identify any attempted tags (@FireController) and convert them into mentions on Discord
+  # Only works if a bot is enabled because it needs to be aware of what users there are in the Discord server.
+  mention_discord_users: true
+
+  # A list of guild ids to use the member lists from to check for mentions.
+  mention_servers:
+    - 000000000000000000

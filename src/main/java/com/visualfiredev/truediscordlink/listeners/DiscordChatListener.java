@@ -6,7 +6,10 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
@@ -40,25 +43,37 @@ public class DiscordChatListener implements MessageCreateListener {
         // Bot
         if (channelIds != null && channelIds.size() > 0) {
 
+            // Alert Users who might have been tagged
+            String content = event.getMessageContent();
+            if (discordLink.getConfig().getBoolean("tagging.ping_on_mention")) {
+                for (Player player : discordLink.getServer().getOnlinePlayers()) {
+                    if (content.contains(player.getName()) || content.contains(player.getDisplayName())) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 2, 1);
+                        content = content.replace(player.getName(), "&a" + player.getName() + "&r");
+                        content = content.replace(player.getDisplayName(), "&a" + player.getDisplayName() + "&r");
+                    }
+                }
+            }
+
             // Check for Channel & Send Message
             int index = channelIds.indexOf(event.getChannel().getId());
             if (index != -1) {
                 if (event.getMessageAttachments().size() > 0) {
                     // Fetch Attachment Format & Get URL from FIRST & FIRST ONLY attachment
                     String receiveAttachmentFormat = ChatColor.translateAlternateColorCodes('&',
-                        discordLink.getLangString("messages.receive_attachment_format",
-                            new String[] { "%username", event.getMessageAuthor().getName() },
-                            new String[] { "%nickname", event.getMessageAuthor().getDisplayName() },
-                            new String[] { "%discriminator", event.getMessageAuthor().getDiscriminator().toString() },
-                            new String[] { "%id", event.getMessageAuthor().getIdAsString() }
-                        )
+                            discordLink.getLangString("messages.receive_attachment_format",
+                                    new String[]{"%username", event.getMessageAuthor().getName()},
+                                    new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
+                                    new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
+                                    new String[]{"%id", event.getMessageAuthor().getIdAsString()}
+                            )
                     );
                     String attachmentUrl = event.getMessageAttachments().get(0).getProxyUrl().toString();
                     String messageContent;
                     if (event.getMessageContent().isEmpty()) {
                         messageContent = ChatColor.translateAlternateColorCodes('&', discordLink.getLangString("messages.receive_attachment_placeholder"));
                     } else {
-                        messageContent = event.getMessageContent();
+                        messageContent = content;
                     }
 
                     // Split At Message
@@ -67,35 +82,35 @@ public class DiscordChatListener implements MessageCreateListener {
                     String part2 = receiveAttachmentFormat.substring(messageIndex + "message".length() + 1);
 
                     // Make Part 1 Component
-                    TextComponent message = new TextComponent(part1);
+                    TextComponent txtMessage = new TextComponent(part1);
 
                     // Make Content Clickable & Hoverable
-                    TextComponent content = new TextComponent(messageContent);
-                    content.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachmentUrl));
+                    TextComponent txtContent = new TextComponent(messageContent);
+                    txtContent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachmentUrl));
 
                     // Make Hover Clickable & Colored
-                    TextComponent hover = new TextComponent(attachmentUrl);
-                    hover.setItalic(true);
-                    hover.setColor(net.md_5.bungee.api.ChatColor.BLUE);
-                    content.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
+                    TextComponent txtHover = new TextComponent(attachmentUrl);
+                    txtHover.setItalic(true);
+                    txtHover.setColor(net.md_5.bungee.api.ChatColor.BLUE);
+                    txtContent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(txtHover).create()));
 
                     // Make Part 2 Component
-                    TextComponent further = new TextComponent(part2);
+                    TextComponent txtFurther = new TextComponent(part2);
 
                     // Add Components
-                    message.addExtra(content);
-                    message.addExtra(further);
+                    txtMessage.addExtra(txtContent);
+                    txtMessage.addExtra(txtFurther);
 
                     // Send Message
-                    discordLink.getServer().spigot().broadcast(message);
+                    discordLink.getServer().spigot().broadcast(txtMessage);
                 } else {
                     discordLink.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',
                         discordLink.getLangString("messages.receive_format",
-                            new String[] { "%username", event.getMessageAuthor().getName() },
-                            new String[] { "%nickname", event.getMessageAuthor().getDisplayName() },
-                            new String[] { "%discriminator", event.getMessageAuthor().getDiscriminator().toString() },
-                            new String[] { "%id", event.getMessageAuthor().getIdAsString() },
-                            new String[] { "%message", event.getMessageContent() }
+                                new String[]{"%username", event.getMessageAuthor().getName()},
+                                new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
+                                new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
+                                new String[]{"%id", event.getMessageAuthor().getIdAsString()},
+                                new String[]{"%message", content }
                         )
                     ));
                 }

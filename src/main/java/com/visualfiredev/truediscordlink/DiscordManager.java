@@ -6,6 +6,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -13,10 +15,17 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DiscordManager {
+
+    // Constants
+    private final Pattern mentionRegex = Pattern.compile("@\\w*");
 
     // Instance Variables
     private final TrueDiscordLink discordlink;
@@ -38,6 +47,53 @@ public class DiscordManager {
             return;
         }
 
+        // Check for Tags
+        if (!discordlink.getConfig().getBoolean("tagging.enable_tagging")) {
+            content = content.replace("@", "@ ");
+        } else {
+            if (!discordlink.getConfig().getBoolean("tagging.enable_everyone_tagging")) {
+                content = content.replace("@here", "@ here").replace("@everyone", "@ everyone");
+            }
+            if (!discordlink.getConfig().getBoolean("tagging.enable_role_tagging")) {
+                content = content.replace("@&", "@& ");
+            }
+        }
+
+        // Check for Mentions
+        // TODO: Rewrite this is a mESSSSSS
+        if (discordlink.getConfig().getBoolean("tagging.mention_discord_users") && channelIds != null && discordlink.getDiscord() != null) {
+            Matcher matcher = mentionRegex.matcher(content);
+            List<String> allMatches = new ArrayList<String>();
+            while (matcher.find()) {
+                allMatches.add(matcher.group());
+            }
+            for (String match : allMatches) {
+                String username = match.substring(1);
+
+                System.out.println("MATCH: " + match);
+                System.out.println("USERNAME: " + username);
+
+                // TODO: This needs a check
+                List<Long> mentionserverids = discordlink.getConfig().getLongList("tagging.mention_servers");
+                for (Long id : mentionserverids) {
+                    discordlink.getDiscord().getServerById(id).ifPresent(Server::getMembers);
+                }
+
+                Collection<User> users = discordlink.getDiscord().getCachedUsers();
+                for (User user : users) {
+                    System.out.println("USER: " + user.getName());
+                    // TODO: add check for nicknames
+                    if (user.getName().toLowerCase().startsWith(username.toLowerCase())) {
+                        System.out.println("STARTS WITH!");
+                        content = content.replace(match, "<@" + user.getId() + ">");
+                    }
+                }
+            }
+        }
+
+        // Used for stuff
+        String finalContent = content;
+
         // Webhooks
         if (webhookUrls != null) {
 
@@ -50,16 +106,14 @@ public class DiscordManager {
             // Send Message
             for (String webhookUrl : webhookUrls) {
                 if (player != null) {
-                    sendWebhookMessage(webhookUrl, ChatColor.translateAlternateColorCodes('&',
-                            discordlink.getLangString("messages.webhook_relay_format",
-                                    new String[] { "%name", player.getName() },
-                                    new String[] { "%displayname", player.getDisplayName() },
-                                    new String[] { "%uuid", player.getUniqueId().toString() },
-                                    new String[] { "%message", content }
-                            )
+                    sendWebhookMessage(webhookUrl, discordlink.getLangString("messages.webhook_relay_format",
+                        new String[] { "%name", player.getName() },
+                        new String[] { "%displayname", player.getDisplayName() },
+                        new String[] { "%uuid", player.getUniqueId().toString() },
+                        new String[] { "%message", finalContent }
                     ), player.getName(), skin);
                 } else {
-                    sendWebhookMessage(webhookUrl, ChatColor.translateAlternateColorCodes('&', content));
+                    sendWebhookMessage(webhookUrl, finalContent);
                 }
             }
 
@@ -72,19 +126,19 @@ public class DiscordManager {
             for (long channelId : channelIds) {
                 discordlink.getDiscord().getTextChannelById(channelId).ifPresent(channel -> {
                     if (player != null) {
-                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                discordlink.getLangString("messages.bot_relay_format",
-                                        new String[] { "%name", player.getName() },
-                                        new String[] { "%displayname", player.getDisplayName() },
-                                        new String[] { "%uuid", player.getUniqueId().toString() },
-                                        new String[] { "%message", content }
-                                )
-                        ));
+                        CompletableFuture<Message> future = channel.sendMessage(
+                            discordlink.getLangString("messages.bot_relay_format",
+                                new String[] { "%name", player.getName() },
+                                new String[] { "%displayname", player.getDisplayName() },
+                                new String[] { "%uuid", player.getUniqueId().toString() },
+                                new String[] { "%message", finalContent }
+                            )
+                        );
                         if (blocking) {
                             future.join();
                         }
                     } else {
-                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&', content));
+                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&', finalContent));
                         if (blocking) {
                             future.join();
                         }
