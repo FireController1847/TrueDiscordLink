@@ -117,8 +117,9 @@
         <dependency>
             <groupId>net.minecraft</groupId>
             <artifactId>server</artifactId>
+            <version>1_15_R1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/spigot-1.15.2.jar</systemPath>
+            <systemPath>${project.basedir}/spigot-1_15_R1.jar</systemPath>
         </dependency>
 
         <!-- Javacord -->
