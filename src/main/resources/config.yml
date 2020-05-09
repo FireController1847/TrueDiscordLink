@@ -62,3 +62,4 @@ events:
   player_join: true
   player_quit: true
   player_death: true
+  player_advance: true

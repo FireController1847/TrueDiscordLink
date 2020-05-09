@@ -38,6 +38,9 @@ public class TrueDiscordLink extends JavaPlugin {
         // Set Instance
         instance = this;
 
+        // Initialize Version Helper
+        new VersionHelper(this);
+
         // Configuration Setup (LANG)
         this.saveDefaultConfig();
         this.loadLangConfig();
@@ -54,6 +57,7 @@ public class TrueDiscordLink extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
+        pluginManager.registerEvents(new PlayerAdvancementDoneListener(this), this);
 
         // Login to Discord
         if (this.getConfig().getBoolean("bot.enabled")) {

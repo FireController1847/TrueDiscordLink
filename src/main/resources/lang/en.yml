@@ -7,6 +7,8 @@
 # - %name: The name of a Minecraft user
 # - %displayname: The display name (including prefix & colors) of a Minecraft user
 # - %uuid: The UUID of a Minecraft user
+# - %advancement_name: The name of the advancement achieved
+# - %advancement_description: The description of the advancement achieved
 #
 # DISCORD:
 # - %username: The username of a Discord user
@@ -27,4 +29,5 @@ messages:
 events:
   player_join: "**%name has joined the game!**"
   player_quit: "**%name has left the game!**"
-  player_death: "**%player %message**"
+  player_death: "**%message**"
+  player_advance: "**%name has made the advancement** ***%advancement_name***"

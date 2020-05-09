@@ -105,6 +105,22 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Bukkit -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.15-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SpigotMC w/ NMS -->
+        <dependency>
+            <groupId>net.minecraft</groupId>
+            <artifactId>server</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/spigot-1.15.2.jar</systemPath>
+        </dependency>
+
         <!-- Javacord -->
         <dependency>
             <groupId>org.javacord</groupId>
