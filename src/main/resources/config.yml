@@ -79,8 +79,8 @@ tagging:
   # Whether or not to filter out @here and @everyone
   enable_everyone_tagging: false
 
-  # Whether or not to make a noise when a Minecraft user's username is said in Discord
-  ping_on_mention: true
+  # Whether or not to make a noise & show chat color when a Minecraft user's username is said in Discord
+  mention_minecraft_users: true
 
   # Whether or not to identify any attempted tags (@FireController) and convert them into mentions on Discord
   # Only works if a bot is enabled because it needs to be aware of what users there are in the Discord server.

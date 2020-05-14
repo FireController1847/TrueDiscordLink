@@ -45,7 +45,7 @@ public class DiscordChatListener implements MessageCreateListener {
 
             // Alert Users who might have been tagged
             String content = event.getMessageContent();
-            if (discordLink.getConfig().getBoolean("tagging.ping_on_mention")) {
+            if (discordLink.getConfig().getBoolean("tagging.mention_minecraft_users")) {
                 for (Player player : discordLink.getServer().getOnlinePlayers()) {
                     if (content.contains(player.getName()) || content.contains(player.getDisplayName())) {
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 2, 1);

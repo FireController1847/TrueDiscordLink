@@ -1,9 +1,12 @@
 package com.visualfiredev.truediscordlink.listeners;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.ArrayList;
 
 public class PlayerChatListener implements Listener {
 
@@ -18,7 +21,12 @@ public class PlayerChatListener implements Listener {
     // Event Handler
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        discordlink.getDiscordManager().sendDiscordMessage(event.getMessage(), event.getPlayer());
+        ArrayList<String[]> modifications = discordlink.getDiscordManager().sendDiscordMessage(event.getMessage(), false, event.getPlayer());
+        if (modifications != null) {
+            for (String[] modification : modifications) {
+                event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage().replace(modification[0], modification[1])));
+            }
+        }
     }
 
 }
