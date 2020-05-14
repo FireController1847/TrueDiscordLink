@@ -71,13 +71,13 @@ events:
 #     Tagging     #
 ###################
 tagging:
-  # Whether or not to filter out ANY phrases starting with @ (pevents any mentions in Discord).
+  # Whether or not to filter out ANY phrases starting with @ (prevents any mentions in Discord).
   enable_tagging: true
 
   # Whether or not to filter out @here and @everyone.
   enable_everyone_tagging: false
 
-  # Whether or not to filter out any role tags (@&).
+  # Whether or not to filter out ANY phrases starting with @& (prevents role mentions in Discord.)
   enable_role_tagging: false
 
   # Whether or not to make a noise & show chat color when a Minecraft user's username is said in Discord.
@@ -86,7 +86,7 @@ tagging:
   # Don't change this unless you know exactly what it should be.
   mention_minecraft_noise: "ENTITY_EXPERIENCE_ORB_PICKUP"
 
-  # Whether or not to identify any attempted tags (@FireController) and convert them into mentions on Discord.
+  # Whether or not to identify any attempted tags (@Fire) and convert them into mentions on Discord.
   # Only works if a bot is enabled because it needs to be aware of what users there are in the Discord server.
   mention_discord_users: true
 

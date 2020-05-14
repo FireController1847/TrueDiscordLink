@@ -11,7 +11,7 @@ public class CommandTrueDiscordLink implements CommandExecutor {
 
         // Main Command
         if (args.length == 0) {
-            if (!CommandUtil.hasPermission(sender, "truediscordlink.discord")) {
+            if (!CommandUtil.hasPermission(sender, "truediscordlink.command.discord")) {
                 CommandUtil.tellNoPermission(sender);
                 return true;
             }
@@ -20,7 +20,7 @@ public class CommandTrueDiscordLink implements CommandExecutor {
 
         // Reload Command
         } else if (args[0].equalsIgnoreCase("reload")) {
-            if (!CommandUtil.hasPermission(sender, "truediscordlink.reload")) {
+            if (!CommandUtil.hasPermission(sender, "truediscordlink.command.reload")) {
                 CommandUtil.tellNoPermission(sender);
                 return true;
             }

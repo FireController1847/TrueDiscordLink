@@ -9,25 +9,39 @@ commands:
     description: Lists all of the available commands for the plugin
     usage: /truediscordlink
     aliases: [truediscord,discordlink,discord,tdl]
-    permission: truediscordlink.discord
+    permission: truediscordlink.command.discord
   truediscordlink reload:
     description: Reloads the configuration files
     usage: /truediscordlink reload
-    permission: truediscordlink.reload
+    permission: truediscordlink.command.reload
 
 permissions:
+  # Stars
   truediscordlink.*:
+    description: Gives permission to everything TrueDiscordLink
+    default: op
+    children:
+      truediscordlink.command.*: true
+      truediscordlink.tagging: true
+  truediscordlink.command.*:
     description: Gives permission to all TrueDiscordLink commands
     default: op
     children:
-      truediscordlink.discord: true
-      truediscordlink.reload: true
-  truediscordlink.discord:
+      truediscordlink.command.discord: true
+      truediscordlink.command.reload: true
+
+  # Commands
+  truediscordlink.command.discord:
     description: Gives permission to the main command
     default: true
-  truediscordlink.reload:
+  truediscordlink.command.reload:
     description: Gives permission to the reload command
     default: op
+
+  # Features
+  truediscordlink.tagging:
+    description: Gives permission to tag users in Discord
+    default: true
 
 api-version: "1.15"
 main: com.visualfiredev.truediscordlink.TrueDiscordLink

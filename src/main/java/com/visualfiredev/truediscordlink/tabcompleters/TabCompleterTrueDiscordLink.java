@@ -13,7 +13,7 @@ import java.util.List;
 public class TabCompleterTrueDiscordLink implements TabCompleter {
 
     private static final String[][] FIRST_ARGS = {
-        { "reload", "truediscordlink.reload" }
+        { "reload", "truediscordlink.command.reload" }
     };
 
     @Override

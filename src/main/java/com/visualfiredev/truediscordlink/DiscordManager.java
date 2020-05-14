@@ -1,6 +1,7 @@
 package com.visualfiredev.truediscordlink;
 
 import com.google.gson.JsonObject;
+import com.visualfiredev.truediscordlink.commands.CommandUtil;
 import org.bukkit.entity.Player;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.user.User;
@@ -40,7 +41,7 @@ public class DiscordManager {
 
         // Run Checks
         this.modifyRemoveTags(atomicContent, atomicModifications);
-        this.modifyCheckMentions(atomicContent, atomicModifications);
+        this.modifyCheckMentions(atomicContent, atomicModifications, player);
 
         // Send messages
         sendBotMessage(atomicContent.get(), blocking, player);
@@ -171,9 +172,14 @@ public class DiscordManager {
             }
         }
     }
-    private void modifyCheckMentions(AtomicReference<String> content, AtomicReference<ArrayList<String[]>> modifications) {
+    private void modifyCheckMentions(AtomicReference<String> content, AtomicReference<ArrayList<String[]>> modifications, Player player) {
         // Check for Mentions
         if (discordlink.getConfig().getBoolean("tagging.mention_discord_users")) {
+            // Check for User Permission
+            if (player != null && !CommandUtil.hasPermission(player, "truediscordlink.tagging")) {
+                return;
+            }
+
             // Check for Matches
             List<String> matches = new ArrayList<String>();
             Matcher matcher = MentionRegex.matcher(content.get());
