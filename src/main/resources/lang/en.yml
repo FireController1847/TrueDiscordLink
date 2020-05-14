@@ -22,6 +22,7 @@
 prefix: "[&bDiscordLink&r]"
 no_permission: "&cYou do not have permission to run this command!"
 config:
+  error: "%prefix &cThere was an error loading the configuration!"
   reloaded: "%prefix Configuration reloaded!"
 messages:
   receive_format: "%prefix <%nickname> %message"
@@ -29,6 +30,9 @@ messages:
   receive_attachment_placeholder: "&9&nOpen Attachment"
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
+tagging:
+  minecraft_mention_color: "&a@%name&r"
+  discord_mention_color: "&a@%name&r"
 events:
   server_start: "**The server has started! :green_circle:**"
   server_shutdown: "**The server has been shut down! :red_circle:**"

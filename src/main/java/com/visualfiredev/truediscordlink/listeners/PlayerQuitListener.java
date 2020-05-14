@@ -22,7 +22,7 @@ public class PlayerQuitListener implements Listener {
         }
 
         discordlink.getDiscordManager().sendDiscordMessage(
-            discordlink.getLangString("events.player_quit",
+            discordlink.getLangString("events.player_quit", false,
                 new String[] { "%name", event.getPlayer().getName() },
                 new String[] { "%displayname", event.getPlayer().getDisplayName() },
                 new String[] { "%uuid", event.getPlayer().getUniqueId().toString() }

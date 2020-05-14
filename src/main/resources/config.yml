@@ -18,15 +18,16 @@ webhooks:
   # Whether or not webhooks should be enabled.
   enabled: true
 
-  # A list of webhooks to send messages to
+  # A list of webhooks to send messages to.
   urls:
     - https://discord.com/webhook1
 
-  # Whether or not to use the player's skin as the avatar for the webhook
+  # Whether or not to use the player's skin as the avatar for the webhook.
   use_avatar: true
 
   # The URL that should be used for providing the skins to the webhook for each user.
   # %uuid is replaced with the user's uuid.
+  # %name is replaced with the user's name.
   skins_url: https://minotar.net/helm/%uuid/2048
 
 ###############
@@ -40,7 +41,7 @@ bot:
   # This value will not change until this server is restarted.
   enabled: true
 
-  # The token of the bot that should be used
+  # The token of the bot that should be used.
   token: "INSERT_TOKEN_HERE"
 
   # A list of channel ids that should receive messages from the Minecraft server.
@@ -48,7 +49,7 @@ bot:
   receive_channels:
     - 000000000000000000
 
-  # A list of channel ids that should relay messages to the Minecraft server.
+  # A list of channel ids that should recieve messages from the Discord server.
   # Leave blank to disable receiving messages via the bot. Useful if you want to use webhooks in combination with a bot.
   relay_channels:
     - 000000000000000000
@@ -70,19 +71,22 @@ events:
 #     Tagging     #
 ###################
 tagging:
-  # Whether or not to filter out ANY phrases starting with @ (pevents any mentions in Discord)
+  # Whether or not to filter out ANY phrases starting with @ (pevents any mentions in Discord).
   enable_tagging: true
 
-  # Whether or not to filter out any role tags (@&)
-  enable_role_tagging: false
-
-  # Whether or not to filter out @here and @everyone
+  # Whether or not to filter out @here and @everyone.
   enable_everyone_tagging: false
 
-  # Whether or not to make a noise & show chat color when a Minecraft user's username is said in Discord
+  # Whether or not to filter out any role tags (@&).
+  enable_role_tagging: false
+
+  # Whether or not to make a noise & show chat color when a Minecraft user's username is said in Discord.
   mention_minecraft_users: true
 
-  # Whether or not to identify any attempted tags (@FireController) and convert them into mentions on Discord
+  # Don't change this unless you know exactly what it should be.
+  mention_minecraft_noise: "ENTITY_EXPERIENCE_ORB_PICKUP"
+
+  # Whether or not to identify any attempted tags (@FireController) and convert them into mentions on Discord.
   # Only works if a bot is enabled because it needs to be aware of what users there are in the Discord server.
   mention_discord_users: true
 

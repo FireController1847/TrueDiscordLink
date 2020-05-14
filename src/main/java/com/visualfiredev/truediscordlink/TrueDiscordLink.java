@@ -3,6 +3,7 @@ package com.visualfiredev.truediscordlink;
 import com.visualfiredev.truediscordlink.commands.CommandTrueDiscordLink;
 import com.visualfiredev.truediscordlink.listeners.*;
 import com.visualfiredev.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
+import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,9 +15,12 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +48,13 @@ public class TrueDiscordLink extends JavaPlugin {
         // Configuration Setup (LANG)
         this.saveDefaultConfig();
         this.loadLangConfig();
+        try {
+            this.validateConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         // Register Executors & Tab Completers
         PluginCommand cmdTrueDiscordLink = Objects.requireNonNull(this.getCommand("truediscordlink"));
@@ -144,8 +155,58 @@ public class TrueDiscordLink extends JavaPlugin {
         }
     }
 
+    // Validates all of the configuration values
+    public void validateConfig() throws Exception {
+        FileConfiguration config = getConfig();
+
+        // Check webhooks
+        if (config.getBoolean("webhooks.enabled")) {
+
+            // Validate URLs
+            List<String> webhookUrls = config.getStringList("webhooks.urls");
+            if (webhookUrls.size() == 0) {
+                throw new InvalidConfigurationException("Webhooks are enabled but there are no webhook urls!");
+            } else {
+                for (String webhookUrl : webhookUrls) {
+                    try {
+                        new URL(webhookUrl);
+                    } catch (MalformedURLException e) {
+                        throw new MalformedURLException("Invalid Webhook URL! " + webhookUrl);
+                    }
+                }
+            }
+
+            // Validate Avatar URL
+            if (config.getBoolean("webhooks.use_avatar")) {
+                String skinsUrl = config.getString("webhooks.skins_url");
+                if (skinsUrl == null) {
+                    throw new InvalidConfigurationException("Missing Skins URL!");
+                } else {
+                    try {
+                        new URL(skinsUrl);
+                    } catch (MalformedURLException e) {
+                        throw new MalformedURLException("Invalid Skins URL!");
+                    }
+                }
+            }
+
+        }
+
+        // Bot Configuration
+        if (config.getBoolean("bot.enabled")) {
+
+            // Validate Mention Servers
+            List<Long> mentionServersIds = config.getLongList("tagging.mention_servers");
+            if (!config.getBoolean("tagging.mention_discord_users") && mentionServersIds.size() == 0) {
+                throw new InvalidConfigurationException("Invalid amount of mention servers!");
+            }
+
+        }
+
+    }
+
     // Language Get String
-    public final String getLangString(String key, String[]... arguments) throws NullPointerException {
+    public final String getLangString(String key, boolean colors, String[]... arguments) throws NullPointerException {
         // Fetch Value
         String value = lang.getString(key);
         if (value == null) {
@@ -157,6 +218,7 @@ public class TrueDiscordLink extends JavaPlugin {
         if (prefix == null) {
             prefix = "[Discord] ";
         }
+        value = value.replace("%prefix", prefix);
 
         // Replace Arguments
         if (arguments != null) {
@@ -165,10 +227,20 @@ public class TrueDiscordLink extends JavaPlugin {
             }
         }
 
-        return value.replace("%prefix", prefix);
+        if (colors) {
+            return ChatColor.translateAlternateColorCodes('&', value);
+        } else {
+            return value;
+        }
+    }
+    public final String getLangString(String key, boolean colors) {
+        return this.getLangString(key, colors, null);
+    }
+    public final String getLangString(String key, String[]... arguments) {
+        return this.getLangString(key, true, arguments);
     }
     public final String getLangString(String key) {
-        return this.getLangString(key, null);
+        return this.getLangString(key, true);
     }
 
     // Getters

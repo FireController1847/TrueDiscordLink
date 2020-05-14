@@ -8,7 +8,7 @@ commands:
   truediscordlink:
     description: Lists all of the available commands for the plugin
     usage: /truediscordlink
-    aliases: [truediscord,discord,tdl]
+    aliases: [truediscord,discordlink,discord,tdl]
     permission: truediscordlink.discord
   truediscordlink reload:
     description: Reloads the configuration files

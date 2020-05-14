@@ -1,7 +1,6 @@
 package com.visualfiredev.truediscordlink.commands;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,12 +12,16 @@ public class CommandConfigReload implements CommandExecutor {
         // Reload Config & Clear Cache
         TrueDiscordLink instance = TrueDiscordLink.getInstance();
         instance.reloadConfig();
-        instance.getDiscordManager().reset();
-        instance.getDiscordChatListener().reset();
         instance.loadLangConfig();
+        try {
+            instance.validateConfig();
+        } catch (Exception e) {
+            sender.sendMessage(instance.getLangString("config.error"));
+            return true;
+        }
 
         // Send Notification Message
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', instance.getLangString("config.reloaded")));
+        sender.sendMessage(instance.getLangString("config.reloaded"));
 
         // Return True as Command Always Works
         return true;

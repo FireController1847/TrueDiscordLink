@@ -22,7 +22,7 @@ public class PlayerJoinListener implements Listener {
         }
 
         discordlink.getDiscordManager().sendDiscordMessage(
-            discordlink.getLangString("events.player_join",
+            discordlink.getLangString("events.player_join", false,
                 new String[] { "%name", event.getPlayer().getName() },
                 new String[] { "%displayname", event.getPlayer().getDisplayName() },
                 new String[] { "%uuid", event.getPlayer().getUniqueId().toString() }

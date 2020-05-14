@@ -1,9 +1,6 @@
 package com.visualfiredev.truediscordlink;
 
 import com.google.gson.JsonObject;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.user.User;
@@ -11,12 +8,12 @@ import org.javacord.api.entity.user.User;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -25,148 +22,62 @@ import java.util.regex.Pattern;
 public class DiscordManager {
 
     // Constants
-    private final Pattern mentionRegex = Pattern.compile("@[\\p{Alnum}\\p{Punct}]*");
+    private static final Pattern MentionRegex = Pattern.compile("@[\\p{Alnum}\\p{Punct}]*");
 
     // Instance Variables
     private final TrueDiscordLink discordlink;
-    private boolean webhooksEnabled;
-    private boolean botEnabled;
-    private List<String> webhookUrls;
-    private List<Long> channelIds;
-    private List<Long> mentionServersIds;
-    private String skinsUrl;
-    private boolean enableTagging;
-    private boolean enableEveryoneTagging;
-    private boolean enableRoleTagging;
-    private boolean mentionDiscordUsers;
-    private boolean useAvatar;
-    private boolean initialized = false;
 
     // Constructor
-    public DiscordManager(TrueDiscordLink discordLink) {
-        this.discordlink = discordLink;
+    public DiscordManager(TrueDiscordLink discordlink) {
+        this.discordlink = discordlink;
     }
 
-    // Send message function
-    public ArrayList<String[]> sendDiscordMessage(String rawContent, boolean blocking, Player player) {
-        // Load Configuration
-        if (!initialized && !initialize()) {
-            return null;
-        }
+    // Sneds a message to the Discord server
+    public ArrayList<String[]> sendDiscordMessage(String content, boolean blocking, Player player) {
+        // Create Message Modifications
+        AtomicReference<String> atomicContent = new AtomicReference<>(content);
+        AtomicReference<ArrayList<String[]>> atomicModifications = new AtomicReference<>(new ArrayList<>());
 
-        // Make Atomic Reference
-        final AtomicReference<String> content = new AtomicReference<>(rawContent); // The content that will be modified
-        final AtomicReference<ArrayList<String[]>> modifications  = new AtomicReference<>(new ArrayList<>()); // Modifications to make to the original chat message
+        // Run Checks
+        this.modifyRemoveTags(atomicContent, atomicModifications);
+        this.modifyCheckMentions(atomicContent, atomicModifications);
 
-        // Check for Tags
-        if (!enableTagging) {
-            content.set(content.get().replace("@", "@ "));
-        } else {
-            if (!enableEveryoneTagging) {
-                content.set(content.get().replace("@here", "@ here").replace("@everyone", "@ everyone"));
-            }
-            if (!enableRoleTagging) {
-                content.set(content.get().replace("@&", "@& "));
-            }
-        }
+        // Send messages
+        sendBotMessage(atomicContent.get(), blocking, player);
+        sendWebhookMessage(atomicContent.get(), player); // Webhooks are always blocking because of HTTP requests... Is this able to be changed?
 
-        // Check for Mentions
-        if (mentionDiscordUsers && botEnabled) {
+        // Return Modifications
+        return atomicModifications.get();
+    }
+    public ArrayList<String[]> sendDiscordMessage(String content, Player player) {
+        return this.sendDiscordMessage(content, false, player);
+    }
+    public ArrayList<String[]> sendDiscordMessage(String content, boolean blocking) {
+        return this.sendDiscordMessage(content, blocking, null);
+    }
+    public ArrayList<String[]> sendDiscordMessage(String content) {
+        return this.sendDiscordMessage(content, false);
+    }
 
-            // Check Matches
-            List<String> matches = new ArrayList<String>();
-            Matcher matcher = mentionRegex.matcher(content.get());
-            while (matcher.find()) {
-                matches.add(matcher.group());
-            }
-
-            // Manage Matches
-            for (String match : matches) {
-                String username = match.substring(1).toLowerCase();
-
-                System.out.println("MATCH: " + match);
-                System.out.println("USERNAME: " + username);
-
-                // Loop Through Each Server
-                for (Long serverId : mentionServersIds) {
-                    discordlink.getDiscord().getServerById(serverId).ifPresent(server -> {
-                        // Search for User in Members
-                        Collection<User> users = server.getMembers();
-                        for (User user : users) {
-                            String name = user.getName();
-                            String nickname = user.getNickname(server).orElse(null);
-
-                            System.out.println("NAME: " + name);
-                            System.out.println("NICKNAME: " + nickname);
-
-                            // Check for Exact Match
-                            boolean isMatch = false;
-                            if (username.equalsIgnoreCase(name) || (nickname != null && username.equalsIgnoreCase(nickname))) {
-                                isMatch = true;
-
-                            // Check for Partial Match (min length of 3)
-                            } else if (username.length() > 3 && (name.toLowerCase().startsWith(username) || (nickname != null && nickname.toLowerCase().startsWith(username)))) {
-                                isMatch = true;
-                            }
-
-                            // Replace First Occurance
-                            if (isMatch) {
-                                System.out.println("IS MATCH!");
-                                content.set(content.get().replace(match, "<@" + user.getId() + ">"));
-                                modifications.get().add(new String[] { match, "&a@" + (nickname != null ? nickname : name) + "&r" });
-                                break;
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        // Webhooks
-        if (webhooksEnabled) {
-
-            // Prepare Skin
-            String skin = null;
-            if (useAvatar && player != null) {
-                skin = skinsUrl.replace("%uuid", player.getUniqueId().toString());
-            }
-
-            // Send Message
-            for (String webhookUrl : webhookUrls) {
-                if (player != null) {
-                    sendWebhookMessage(webhookUrl, discordlink.getLangString("messages.webhook_relay_format",
-                        new String[] { "%name", player.getName() },
-                        new String[] { "%displayname", player.getDisplayName() },
-                        new String[] { "%uuid", player.getUniqueId().toString() },
-                        new String[] { "%message", content.get() }
-                    ), player.getName(), skin);
-                } else {
-                    sendWebhookMessage(webhookUrl, content.get());
-                }
-            }
-
-        }
-
-        // Bot
-        if (botEnabled) {
+    // Sends a message to the Discord server via a bot
+    private void sendBotMessage(final String content, boolean blocking, Player player) {
+        if (discordlink.getConfig().getBoolean("bot.enabled")) {
 
             // Find Channel & Send Message
-            for (long channelId : channelIds) {
+            for (long channelId : discordlink.getConfig().getLongList("bot.relay_channels")) {
                 discordlink.getDiscord().getTextChannelById(channelId).ifPresent(channel -> {
                     if (player != null) {
-                        CompletableFuture<Message> future = channel.sendMessage(
-                            discordlink.getLangString("messages.bot_relay_format",
-                                new String[] { "%name", player.getName() },
-                                new String[] { "%displayname", player.getDisplayName() },
-                                new String[] { "%uuid", player.getUniqueId().toString() },
-                                new String[] { "%message", content.get() }
-                            )
-                        );
+                        CompletableFuture<Message> future = channel.sendMessage(discordlink.getLangString("messages.bot_relay_format", false,
+                            new String[] { "%name", player.getName() },
+                            new String[] { "%displayname", player.getDisplayName() },
+                            new String[] { "%uuid", player.getUniqueId().toString() },
+                            new String[] { "%message", content }
+                        ));
                         if (blocking) {
                             future.join();
                         }
                     } else {
-                        CompletableFuture<Message> future = channel.sendMessage(ChatColor.translateAlternateColorCodes('&', content.get()));
+                        CompletableFuture<Message> future = channel.sendMessage(content);
                         if (blocking) {
                             future.join();
                         }
@@ -175,21 +86,39 @@ public class DiscordManager {
             }
 
         }
-
-        return modifications.get();
-    }
-    public ArrayList<String[]> sendDiscordMessage(String content, Player player) {
-        return this.sendDiscordMessage(content, false, player);
-    }
-    public ArrayList<String[]> sendDiscordMessage(String content, boolean blocking) {
-        return this.sendDiscordMessage(content, blocking);
-    }
-    public ArrayList<String[]> sendDiscordMessage(String content) {
-        return this.sendDiscordMessage(content, false);
     }
 
-    // Sends a message via a webhook
-    private void sendWebhookMessage(String webhookUrl, String content, String username, String skin) {
+    // Sends a message to the Discord server via a webhook
+    private void sendWebhookMessage(final String content, Player player) {
+        if (discordlink.getConfig().getBoolean("webhooks.enabled")) {
+
+            // Build Skin URL
+            String skin = null;
+            if (discordlink.getConfig().getBoolean("webhooks.use_avatar") && player != null) {
+                skin = Objects.requireNonNull(discordlink.getConfig().getString("webhooks.skins_url"))
+                        .replace("%uuid", player.getUniqueId().toString())
+                        .replace("%name", player.getName());
+            }
+
+            // Send Message
+            for (String url : discordlink.getConfig().getStringList("webhooks.urls")) {
+                if (player != null) {
+                    this.makeWebhookRequest(url, discordlink.getLangString("messages.webhook_relay_format", false,
+                        new String[] { "%name", player.getName() },
+                        new String[] { "%displayname", player.getDisplayName() },
+                        new String[] { "%uuid", player.getUniqueId().toString() },
+                        new String[] { "%message", content }
+                    ), player.getName(), skin);
+                } else {
+                    this.makeWebhookRequest(url, content);
+                }
+            }
+
+        }
+    }
+
+    // Makes a request to a webhook
+    private void makeWebhookRequest(String webhookUrl, String content, String username, String skin) {
         try {
             // Make Connection
             HttpsURLConnection connection = (HttpsURLConnection) new URL(webhookUrl).openConnection();
@@ -222,98 +151,80 @@ public class DiscordManager {
             e.printStackTrace();
         }
     }
-    private void sendWebhookMessage(String webhookUrl, String content, String username) {
-        this.sendWebhookMessage(webhookUrl, content, username, null);
+    private void makeWebhookRequest(String webhookUrl, String content, String username) {
+        this.makeWebhookRequest(webhookUrl, content, username, null);
     }
-    private void sendWebhookMessage(String webhookUrl, String content) {
-        this.sendWebhookMessage(webhookUrl, content, null, null);
+    private void makeWebhookRequest(String webhookUrl, String content) {
+        this.makeWebhookRequest(webhookUrl, content, null, null);
     }
 
-
-    // Configuration Cache Initialization
-    private boolean initialize() {
-        FileConfiguration config = discordlink.getConfig();
-
-        // Webhooks Configuration
-        if (config.getBoolean("webhooks.enabled")) {
-            webhooksEnabled = true;
-
-            // Load Webook URLs
-            webhookUrls = config.getStringList("webhooks.urls");
-            if (webhookUrls.size() == 0) {
-                (new InvalidConfigurationException("Webhooks are enabled but there are no webhook urls!")).printStackTrace();
-                return false;
-            } else {
-                for (String webhookUrl : webhookUrls) {
-                    try {
-                        new URL(webhookUrl);
-                    } catch (MalformedURLException e) {
-                        (new MalformedURLException("Invalid Webhook URL! " + webhookUrl)).printStackTrace();
-                        return false;
-                    }
-                }
+    // Message checks
+    private void modifyRemoveTags(AtomicReference<String> content, AtomicReference<ArrayList<String[]>> modifications) {
+        if (!discordlink.getConfig().getBoolean("tagging.enable_tagging")) {
+            content.set(content.get().replace("@", "@ "));
+        } else {
+            if (!discordlink.getConfig().getBoolean("tagging.enable_everyone_tagging")) {
+                content.set(content.get().replace("@here", "@ here").replace("@everyone", "@ everyone"));
             }
-
-            // Avatar Configuration
-            useAvatar = config.getBoolean("webhooks.use_avatar");
-            if (useAvatar) {
-                // Load Skins URL
-                skinsUrl = config.getString("webhooks.skins_url");
-                if (skinsUrl == null) {
-                    (new InvalidConfigurationException("Missing Skins URL!")).printStackTrace();
-                    return false;
-                } else {
-                    try {
-                        new URL(skinsUrl);
-                    } catch (MalformedURLException e) {
-                        (new MalformedURLException("Invalid Skins URL!")).printStackTrace();
-                        skinsUrl = null;
-                        return false;
-                    }
-                }
-            }
-
-        }
-
-        // Bot Configuration
-        if (config.getBoolean("bot.enabled")) {
-            botEnabled = true;
-
-            // Get Relay Channels
-            channelIds = config.getLongList("bot.relay_channels");
-
-            // Get Tagging Booleans
-            enableTagging = config.getBoolean("tagging.enable_tagging");
-            enableEveryoneTagging = config.getBoolean("tagging.enable_everyone_tagging");
-            enableRoleTagging = config.getBoolean("tagging.enable_role_tagging");
-
-            // Get Mention Servers
-            mentionDiscordUsers = config.getBoolean("tagging.mention_discord_users");
-            mentionServersIds = config.getLongList("tagging.mention_servers");
-            if (!config.getBoolean("tagging.mention_discord_users") && mentionServersIds.size() == 0) {
-                (new InvalidConfigurationException("Invalid amount of mention servers!")).printStackTrace();
-                return false;
+            if (!discordlink.getConfig().getBoolean("tagging.enable_role_tagging")) {
+                content.set(content.get().replace("@&", "@& "));
             }
         }
-
-        initialized = true;
-        return true;
     }
+    private void modifyCheckMentions(AtomicReference<String> content, AtomicReference<ArrayList<String[]>> modifications) {
+        // Check for Mentions
+        if (discordlink.getConfig().getBoolean("tagging.mention_discord_users")) {
+            // Check for Matches
+            List<String> matches = new ArrayList<String>();
+            Matcher matcher = MentionRegex.matcher(content.get());
+            while (matcher.find()) {
+                matches.add(matcher.group());
+            }
 
-    // Configuration Cache Reset
-    public void reset() {
-        webhooksEnabled = false;
-        botEnabled = false;
-        webhookUrls = null;
-        channelIds = null;
-        mentionServersIds = null;
-        skinsUrl = null;
-        enableTagging = false;
-        enableEveryoneTagging = false;
-        enableRoleTagging = false;
-        mentionDiscordUsers = false;
-        useAvatar = false;
-        initialized = false;
+            // Loop Through Matches
+            for (String match : matches) {
+                String username = match.substring(1);
+                if (username.isEmpty()) {
+                    continue;
+                }
+
+                // Loop Through Each Discord Server
+                for (Long serverId : discordlink.getConfig().getLongList("tagging.mention_servers")) {
+                    discordlink.getDiscord().getServerById(serverId).ifPresent(server -> {
+
+                        // Search for User in Members
+                        Collection<User> users = server.getMembers();
+                        for (User user : users) {
+                            String name = user.getName();
+                            String nickname = user.getNickname(server).orElse(null);
+
+                            // Check for Exact Match
+                            boolean isMatch = false;
+                            if (username.equalsIgnoreCase(name) || username.equalsIgnoreCase(nickname)) {
+                                isMatch = true;
+
+                            // Check for Partial Match (min len 3)
+                            } else if (username.length() > 3 && (name.toLowerCase().startsWith(username.toLowerCase()) || (nickname != null && nickname.toLowerCase().startsWith(username.toLowerCase())))) {
+                                isMatch = true;
+                            }
+
+                            // Replace First Occurance
+                            if (isMatch) {
+                                content.set(content.get().replace(match, "<@" + user.getId() + ">"));
+                                modifications.get().add(new String[] {
+                                    match,
+                                    discordlink.getLangString("tagging.minecraft_mention_color",
+                                        new String[] { "%name", (nickname != null ? nickname : name) }
+                                    )
+                                });
+                                break;
+                            }
+                        }
+
+                    });
+                }
+            }
+        }
     }
 
 }

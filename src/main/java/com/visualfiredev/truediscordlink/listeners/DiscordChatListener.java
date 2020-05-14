@@ -5,10 +5,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -19,8 +17,6 @@ public class DiscordChatListener implements MessageCreateListener {
 
     // Instance Variables
     private final TrueDiscordLink discordLink;
-    private List<Long> channelIds;
-    private boolean initialized;
 
     // Constructor
     public DiscordChatListener(TrueDiscordLink discordLink) {
@@ -35,13 +31,9 @@ public class DiscordChatListener implements MessageCreateListener {
             return;
         }
 
-        // Load Configuration
-        if (!initialized && !initialize()) {
-            return;
-        }
-
-        // Bot
-        if (channelIds != null && channelIds.size() > 0) {
+        // Check if Bot Is Enabled
+        List<Long> channelIds = discordLink.getConfig().getLongList("bot.receive_channels");
+        if (channelIds.size() > 0) {
 
             // Alert Users who might have been tagged
             String content = event.getMessageContent();
@@ -60,18 +52,16 @@ public class DiscordChatListener implements MessageCreateListener {
             if (index != -1) {
                 if (event.getMessageAttachments().size() > 0) {
                     // Fetch Attachment Format & Get URL from FIRST & FIRST ONLY attachment
-                    String receiveAttachmentFormat = ChatColor.translateAlternateColorCodes('&',
-                            discordLink.getLangString("messages.receive_attachment_format",
-                                    new String[]{"%username", event.getMessageAuthor().getName()},
-                                    new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
-                                    new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
-                                    new String[]{"%id", event.getMessageAuthor().getIdAsString()}
-                            )
+                    String receiveAttachmentFormat = discordLink.getLangString("messages.receive_attachment_format",
+                        new String[]{"%username", event.getMessageAuthor().getName()},
+                        new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
+                        new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
+                        new String[]{"%id", event.getMessageAuthor().getIdAsString()}
                     );
                     String attachmentUrl = event.getMessageAttachments().get(0).getProxyUrl().toString();
                     String messageContent;
                     if (event.getMessageContent().isEmpty()) {
-                        messageContent = ChatColor.translateAlternateColorCodes('&', discordLink.getLangString("messages.receive_attachment_placeholder"));
+                        messageContent = discordLink.getLangString("messages.receive_attachment_placeholder");
                     } else {
                         messageContent = content;
                     }
@@ -104,38 +94,17 @@ public class DiscordChatListener implements MessageCreateListener {
                     // Send Message
                     discordLink.getServer().spigot().broadcast(txtMessage);
                 } else {
-                    discordLink.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                        discordLink.getLangString("messages.receive_format",
-                                new String[]{"%username", event.getMessageAuthor().getName()},
-                                new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
-                                new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
-                                new String[]{"%id", event.getMessageAuthor().getIdAsString()},
-                                new String[]{"%message", content }
-                        )
+                    discordLink.getServer().broadcastMessage(discordLink.getLangString("messages.receive_format",
+                        new String[]{"%username", event.getMessageAuthor().getName()},
+                        new String[]{"%nickname", event.getMessageAuthor().getDisplayName()},
+                        new String[]{"%discriminator", event.getMessageAuthor().getDiscriminator().toString()},
+                        new String[]{"%id", event.getMessageAuthor().getIdAsString()},
+                        new String[]{"%message", content }
                     ));
                 }
             }
 
         }
-    }
-
-    // Configuration Cache Initialization
-    private boolean initialize() {
-        FileConfiguration config = discordLink.getConfig();
-
-        // Bot Configuration
-        if (config.getBoolean("bot.enabled")) {
-            channelIds = config.getLongList("bot.receive_channels");
-        }
-
-        initialized = true;
-        return true;
-    }
-
-    // Configuration Cache Reset
-    public void reset() {
-        channelIds = null;
-        initialized = false;
     }
 
 }

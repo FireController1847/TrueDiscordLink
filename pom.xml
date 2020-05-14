@@ -7,7 +7,7 @@
     <!-- Info -->
     <groupId>com.visualfiredev</groupId>
     <artifactId>truediscordlink</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-indev-${git.total.commit.count}</version>
     <name>TrueDiscordLink</name>
     <description>Provides a link between Discord and your Minecraft server</description>
 
@@ -24,6 +24,21 @@
 
         <!-- Plugins -->
         <plugins>
+
+            <!-- Git Commit ID Plugin -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- Maven Shade Plugin -->
             <plugin>
