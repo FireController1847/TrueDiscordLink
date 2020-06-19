@@ -1,6 +1,9 @@
 package com.visualfiredev.truediscordlink.listeners;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -45,15 +48,29 @@ public class DiscordChatListener implements MessageCreateListener {
             // Custom Commands
             ConfigurationSection commands = discordlink.getConfig().getConfigurationSection("bot.discord.commands");
             if (commands != null) {
+
+                // Fetch Commands
                 Map<String, Object> values = commands.getValues(false);
                 if (values.size() > 0) {
+
+                    // Find Command
                     for (Map.Entry<String, Object> entry : values.entrySet()) {
                         if (!(entry.getValue() instanceof String)) {
                             continue;
                         }
 
+                        // Handle Command
                         if (command.equalsIgnoreCase((String) entry.getKey())) {
-                            message.getChannel().sendMessage((String) entry.getValue());
+
+                            String value = (String) entry.getValue();
+
+                            // Handle Playerholder API Support
+                            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                value = PlaceholderAPI.setPlaceholders(null, value);
+                                value = ChatColor.stripColor(value);
+                            }
+
+                            message.getChannel().sendMessage(value);
                             return;
                         }
                     }

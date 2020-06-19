@@ -74,7 +74,7 @@ bot:
 
     # The commands to include on the Discord server that users can run.
     # To disable, just leave blank
-    # Variables include:
+    # Supports Placeholder API
     commands:
       ip: "Join us at `server.mywebsite.net`"
       website: "Visit our website at https://www.mywebsite.net/"
