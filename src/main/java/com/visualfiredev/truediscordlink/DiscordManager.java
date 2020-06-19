@@ -2,6 +2,12 @@ package com.visualfiredev.truediscordlink;
 
 import com.google.gson.JsonObject;
 import com.visualfiredev.truediscordlink.commands.CommandUtil;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.user.User;
@@ -33,7 +39,98 @@ public class DiscordManager {
         this.discordlink = discordlink;
     }
 
-    // Sneds a message to the Discord server
+    // Sends a message to the Minecraft server
+    public void sendMinecraftMessage(Message message, boolean edit) {
+        // Exclude Non-Server Messages, System Messages, Bot Messages, & Webhook Messages
+        if (!message.isServerMessage() || message.getAuthor() == null || message.getAuthor().isBotUser() || message.getAuthor().isWebhook()) {
+            return;
+        }
+
+        // Check if Bot Is Enabled
+        List<Long> channelIds = discordlink.getConfig().getLongList("bot.receive_channels");
+        if (channelIds.size() > 0) {
+
+            // Filter colors
+            String content = message.getContent().replace("§", "&");
+
+            // Alert Users who might have been tagged & append asterisk for edits
+            if (discordlink.getConfig().getBoolean("tagging.mention_minecraft_users")) {
+                for (Player player : discordlink.getServer().getOnlinePlayers()) {
+                    if (content.contains(player.getName()) || content.contains(player.getDisplayName())) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 2, 1);
+                        content = content.replace(player.getName(), "§a" + player.getName() + "§r");
+                        content = content.replace(player.getDisplayName(), "§a" + player.getDisplayName() + "§r");
+                    }
+                }
+            }
+            if (edit) {
+                content = content + "*";
+            }
+
+            // Check for Channel & Send Message
+            int index = channelIds.indexOf(message.getChannel().getId());
+            if (index != -1) {
+                if (message.getAttachments().size() > 0) {
+                    // Fetch Attachment Format & Get URL from FIRST & FIRST ONLY attachment
+                    String receiveAttachmentFormat = discordlink.getLangString("messages.receive_attachment_format", false,
+                            new String[]{"%username", message.getAuthor().getName()},
+                            new String[]{"%nickname", message.getAuthor().getDisplayName()},
+                            new String[]{"%discriminator", message.getAuthor().getDiscriminator().toString()},
+                            new String[]{"%id", message.getAuthor().getIdAsString()}
+                    );
+                    String attachmentUrl = message.getAttachments().get(0).getProxyUrl().toString();
+                    String messageContent;
+                    if (message.getContent().isEmpty()) {
+                        messageContent = discordlink.getLangString("messages.receive_attachment_placeholder", false);
+                    } else {
+                        messageContent = content;
+                    }
+
+                    // Split At Message
+                    int messageIndex = receiveAttachmentFormat.indexOf("%message");
+                    String part1 = receiveAttachmentFormat.substring(0, messageIndex);
+                    String part2 = receiveAttachmentFormat.substring(messageIndex + "message".length() + 1);
+
+                    // Make Part 1 Component
+                    TextComponent txtMessage = new TextComponent(part1);
+
+                    // Make Content Clickable & Hoverable
+                    TextComponent txtContent = new TextComponent(messageContent);
+                    txtContent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachmentUrl));
+
+                    // Make Hover Clickable & Colored
+                    TextComponent txtHover = new TextComponent(attachmentUrl);
+                    txtHover.setItalic(true);
+                    txtHover.setColor(net.md_5.bungee.api.ChatColor.BLUE);
+                    txtContent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(txtHover).create()));
+
+                    // Make Part 2 Component
+                    TextComponent txtFurther = new TextComponent(part2);
+
+                    // Add Components
+                    txtMessage.addExtra(txtContent);
+                    txtMessage.addExtra(txtFurther);
+
+                    // Send Message
+                    discordlink.getServer().spigot().broadcast(txtMessage);
+                } else {
+                    discordlink.getServer().broadcastMessage(discordlink.getLangString("messages.receive_format", false,
+                            new String[]{"%username", message.getAuthor().getName()},
+                            new String[]{"%nickname", message.getAuthor().getDisplayName()},
+                            new String[]{"%discriminator", message.getAuthor().getDiscriminator().toString()},
+                            new String[]{"%id", message.getAuthor().getIdAsString()},
+                            new String[]{"%message", content }
+                    ));
+                }
+            }
+
+        }
+    }
+    public void sendMinecraftMessage(Message message) {
+        sendMinecraftMessage(message, false);
+    }
+
+    // Sends a message to the Discord server
     public ArrayList<String[]> sendDiscordMessage(String content, boolean blocking, Player player) {
         // Create Message Modifications
         AtomicReference<String> atomicContent = new AtomicReference<>(content);

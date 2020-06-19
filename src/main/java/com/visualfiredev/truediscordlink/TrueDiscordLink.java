@@ -35,6 +35,7 @@ public class TrueDiscordLink extends JavaPlugin {
     private DiscordManager manager;
     private PlayerChatListener playerChatListener;
     private DiscordChatListener discordChatListener;
+    private DiscordEditListener discordEditListener;
 
     // Plugin Enable Listener
     @Override
@@ -87,6 +88,9 @@ public class TrueDiscordLink extends JavaPlugin {
                 // Register Event Listeners
                 discordChatListener = new DiscordChatListener(this);
                 api.addListener(discordChatListener);
+
+                discordEditListener = new DiscordEditListener(this);
+                api.addListener(discordEditListener);
 
                 // Assign to Variable & Output Login Status
                 discord = api;

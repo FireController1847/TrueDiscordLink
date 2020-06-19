@@ -41,6 +41,9 @@ bot:
   # This value will not change until this server is restarted.
   enabled: true
 
+  # Whether or not the bot should re-sent edited Discord messages with an asterisk at the end.
+  show_edits: true
+
   # The token of the bot that should be used.
   token: "INSERT_TOKEN_HERE"
 

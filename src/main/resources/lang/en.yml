@@ -18,6 +18,7 @@
 
 # Not all arguments work for every item.
 # Colors are accepted!
+# Receive formats must use the following character for colors: §
 
 prefix: "[&bDiscordLink&r]"
 no_permission: "&cYou do not have permission to run this command!"
@@ -26,8 +27,8 @@ config:
   reloaded: "%prefix Configuration reloaded!"
 messages:
   receive_format: "%prefix <%nickname> %message"
-  receive_attachment_format: "%prefix <%nickname> &9&n%message"
-  receive_attachment_placeholder: "&9&nOpen Attachment"
+  receive_attachment_format: "%prefix <%nickname> §9§n%message"
+  receive_attachment_placeholder: "§9§nOpen Attachment"
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
 tagging:
