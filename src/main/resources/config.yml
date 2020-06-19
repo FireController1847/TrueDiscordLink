@@ -73,11 +73,26 @@ bot:
     activity_cycle_speed: 300
 
     # The commands to include on the Discord server that users can run.
-    # To disable, just leave blank
+    # Leave blank to disable all commands.
     # Supports Placeholder API
     commands:
       ip: "Join us at `server.mywebsite.net`"
       website: "Visit our website at https://www.mywebsite.net/"
+      list: "Online Players: %listplayers_in_world_world%"
+      online: "There are currently %server_online% out of %server_max_players% players online."
+
+    # Whether or not to auto-update the channel topic for specific channels
+    # Leave blank to disable
+    auto_channel_topic_ids:
+      - 000000000000000000
+
+    # The rate at which the channel topics should be updated in seconds (minimum 5 minutes) (this is due to a Discord rate limit)
+    # Set to -1 to disable updating (aka set once when the bot launches)
+    auto_channel_topic_update_rate: 300
+
+    # The message to put for auto-channel-topic.
+    # Supports Placeholder API
+    auto_channel_topic_message: ""
 
 ###########################
 #     System Messages     #

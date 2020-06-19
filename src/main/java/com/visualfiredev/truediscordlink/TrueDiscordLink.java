@@ -101,8 +101,9 @@ public class TrueDiscordLink extends JavaPlugin {
                     manager.sendDiscordMessage(getLangString("events.server_start"));
                 }
 
-                // Begin Activity Looping
+                // Begin Loops
                 manager.statusLoop(0);
+                manager.channelTopicLoop();
             }).exceptionally(ExceptionLogger.get());
         } else {
             // Send Server Started Message
@@ -126,6 +127,9 @@ public class TrueDiscordLink extends JavaPlugin {
         // Remove DiscordManager Loop Threads
         if (manager.statusLoopThread != null) {
             manager.statusLoopThread.interrupt();
+        }
+        if (manager.channelTopicLoopThread != null) {
+            manager.channelTopicLoopThread.interrupt();
         }
 
         // Remove Discord Event Listeners & Log Out

@@ -1,11 +1,15 @@
 package com.visualfiredev.truediscordlink;
 
 import com.google.gson.JsonObject;
+import com.vdurmont.emoji.EmojiParser;
 import com.visualfiredev.truediscordlink.commands.CommandUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -22,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -36,6 +40,7 @@ public class DiscordManager {
     // Instance Variables
     private final TrueDiscordLink discordlink;
     protected Thread statusLoopThread;
+    protected Thread channelTopicLoopThread;
 
     // Constructor
     public DiscordManager(TrueDiscordLink discordlink) {
@@ -49,7 +54,7 @@ public class DiscordManager {
         if (channelIds.size() > 0) {
 
             // Filter colors
-            String content = message.getContent().replace("§", "&");
+            String content = EmojiParser.parseToAliases(message.getReadableContent().replace("§", "&"));
 
             // Alert Users who might have been tagged & append asterisk for edits
             if (discordlink.getConfig().getBoolean("tagging.mention_minecraft_users")) {
@@ -334,7 +339,7 @@ public class DiscordManager {
             statusLoopThread.interrupt();
         }
 
-        statusLoopThread = (new Thread(() -> {
+        statusLoopThread = new Thread(() -> {
             AtomicInteger newPosition = new AtomicInteger(position);
 
             // Fetch Activity
@@ -365,8 +370,57 @@ public class DiscordManager {
 
             // Call Next Loop
             statusLoop(newPosition.incrementAndGet());
-        }));
+        });
         statusLoopThread.start();
+    }
+
+    // Channel Topic Loop
+    public void channelTopicLoop() {
+        if (channelTopicLoopThread != null && Thread.currentThread() != channelTopicLoopThread && channelTopicLoopThread.isAlive()) {
+            channelTopicLoopThread.interrupt();
+        }
+
+        channelTopicLoopThread = new Thread(() -> {
+            // Fetch Auto-Channel-Topic-Message & Auto-Channel-Topic-Ids
+            List<Long> channelIds = discordlink.getConfig().getLongList("bot.discord.auto_channel_topic_ids");
+            if (channelIds.size() <= 0) {
+                return;
+            }
+            AtomicReference<String> message = new AtomicReference<>(discordlink.getConfig().getString("bot.discord.auto_channel_topic_message"));
+
+            // Find Channels
+            for (long channelId : channelIds) {
+                discordlink.getDiscord().getServerTextChannelById(channelId).ifPresent(channel -> {
+                    // Handle Playerholder API Support
+                    if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                        message.set(PlaceholderAPI.setPlaceholders(null, message.get()));
+                        message.set(ChatColor.stripColor(message.get()));
+                    }
+
+                    // Update Topics
+                    channel.updateTopic(message.get());
+                });
+            }
+
+            // Begin Next Loop
+            int time = discordlink.getConfig().getInt("bot.discord.auto_channel_topic_update_rate");
+            if (time == -1) {
+                return;
+            } else if (time < 300) {
+                time = 300;
+            }
+
+            // Sleep for Time & Return if Interrupted
+            try {
+                Thread.sleep(time * 1000);
+            } catch (InterruptedException e) {
+                return;
+            }
+
+            // Call Next Loop
+            channelTopicLoop();
+        });
+        channelTopicLoopThread.start();
     }
 
 }

@@ -20,6 +20,7 @@ public class CommandConfigReload implements CommandExecutor {
             return true;
         }
         instance.getDiscordManager().statusLoop(0);
+        instance.getDiscordManager().channelTopicLoop();
 
         // Send Notification Message
         sender.sendMessage(instance.getLangString("config.reloaded"));
