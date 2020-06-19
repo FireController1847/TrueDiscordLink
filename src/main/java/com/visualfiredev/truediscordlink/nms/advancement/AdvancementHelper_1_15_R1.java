@@ -34,6 +34,4 @@ public class AdvancementHelper_1_15_R1 implements IAdvancementHelper {
         return null;
     }
 
-
-
 }

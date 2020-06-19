@@ -41,7 +41,7 @@ bot:
   # This value will not change until this server is restarted.
   enabled: true
 
-  # Whether or not the bot should re-sent edited Discord messages with an asterisk at the end.
+  # Whether or not the bot should re-send edited Discord messages with an asterisk at the end.
   show_edits: true
 
   # The token of the bot that should be used.
@@ -52,10 +52,32 @@ bot:
   receive_channels:
     - 000000000000000000
 
-  # A list of channel ids that should recieve messages from the Discord server.
+  # A list of channel ids that should send messages to the Minecraft server.
   # Leave blank to disable receiving messages via the bot. Useful if you want to use webhooks in combination with a bot.
   relay_channels:
     - 000000000000000000
+
+  # Options related to the Discord server that become available when using a bot
+  discord:
+
+    # The prefix to use for Discord commands
+    # Defaults to "tdl!" if null or blank
+    prefix: "tdl!"
+
+    # The different games / activities that the Discord bot can show
+    activities:
+      - "Minecraft"
+      - "mywebsite.net"
+
+    # The rate at which these statuses will cycle in seconds (minimum 15 seconds)
+    activity_cycle_speed: 300
+
+    # The commands to include on the Discord server that users can run.
+    # To disable, just leave blank
+    # Variables include:
+    commands:
+      ip: "Join us at `server.mywebsite.net`"
+      website: "Visit our website at https://www.mywebsite.net/"
 
 ###########################
 #     System Messages     #

@@ -100,6 +100,9 @@ public class TrueDiscordLink extends JavaPlugin {
                 if (this.getConfig().getBoolean("events.server_start")) {
                     manager.sendDiscordMessage(getLangString("events.server_start"));
                 }
+
+                // Begin Activity Looping
+                manager.statusLoop(0);
             }).exceptionally(ExceptionLogger.get());
         } else {
             // Send Server Started Message
@@ -118,6 +121,11 @@ public class TrueDiscordLink extends JavaPlugin {
         // Send Shutdown Message
         if (this.getConfig().getBoolean("events.server_shutdown")) {
             manager.sendDiscordMessage(getLangString("events.server_shutdown"), true);
+        }
+
+        // Remove DiscordManager Loop Threads
+        if (manager.statusLoopThread != null) {
+            manager.statusLoopThread.interrupt();
         }
 
         // Remove Discord Event Listeners & Log Out

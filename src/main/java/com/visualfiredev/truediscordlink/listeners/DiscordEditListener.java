@@ -29,6 +29,11 @@ public class DiscordEditListener implements MessageEditListener {
             return;
         }
 
+        // Exclude Non-Server Messages, System Messages, Bot Messages, & Webhook Messages
+        if (!message.isServerMessage() || message.getAuthor() == null || message.getAuthor().isBotUser() || message.getAuthor().isWebhook()) {
+            return;
+        }
+
         // If the message is older than 2 minutes, ignore
         try {
             if (message.getLastEditTimestamp().orElseThrow(() -> new Exception("Last edit timestamp cannot be null for message edit event!")).toEpochMilli() - message.getCreationTimestamp().toEpochMilli() > 120000) {

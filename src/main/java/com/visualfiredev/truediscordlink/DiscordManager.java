@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.user.User;
 
@@ -21,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,7 @@ public class DiscordManager {
 
     // Instance Variables
     private final TrueDiscordLink discordlink;
+    protected Thread statusLoopThread;
 
     // Constructor
     public DiscordManager(TrueDiscordLink discordlink) {
@@ -41,11 +44,6 @@ public class DiscordManager {
 
     // Sends a message to the Minecraft server
     public void sendMinecraftMessage(Message message, boolean edit) {
-        // Exclude Non-Server Messages, System Messages, Bot Messages, & Webhook Messages
-        if (!message.isServerMessage() || message.getAuthor() == null || message.getAuthor().isBotUser() || message.getAuthor().isWebhook()) {
-            return;
-        }
-
         // Check if Bot Is Enabled
         List<Long> channelIds = discordlink.getConfig().getLongList("bot.receive_channels");
         if (channelIds.size() > 0) {
@@ -328,6 +326,47 @@ public class DiscordManager {
                 }
             }
         }
+    }
+
+    // Status Loop
+    public void statusLoop(final int position) {
+        if (statusLoopThread != null && Thread.currentThread() != statusLoopThread && statusLoopThread.isAlive()) {
+            statusLoopThread.interrupt();
+        }
+
+        statusLoopThread = (new Thread(() -> {
+            AtomicInteger newPosition = new AtomicInteger(position);
+
+            // Fetch Activity
+            List<String> activities = discordlink.getConfig().getStringList("bot.discord.activities");
+            if (activities.size() <= 0 || discordlink.getDiscord() == null) {
+                return;
+            }
+            if (newPosition.get() > activities.size() - 1) {
+                newPosition.set(0);
+            }
+
+            // Set Activity
+            String activity = activities.get(newPosition.get());
+            discordlink.getDiscord().updateActivity(ActivityType.PLAYING, activity);
+
+            // Begin Next Loop
+            int time = discordlink.getConfig().getInt("bot.discord.activity_cycle_speed");
+            if (time < 15) {
+                time = 15;
+            }
+
+            // Sleep for Time & Return if Interrupted
+            try {
+                Thread.sleep(time * 1000);
+            } catch (InterruptedException e) {
+                return;
+            }
+
+            // Call Next Loop
+            statusLoop(newPosition.incrementAndGet());
+        }));
+        statusLoopThread.start();
     }
 
 }
