@@ -1,6 +1,7 @@
 package com.visualfiredev.truediscordlink;
 
 import com.visualfiredev.truediscordlink.nms.advancement.AdvancementHelper_1_15_R1;
+import com.visualfiredev.truediscordlink.nms.advancement.AdvancementHelper_1_16_R1;
 import com.visualfiredev.truediscordlink.nms.advancement.IAdvancementHelper;
 import org.bukkit.Bukkit;
 
@@ -23,6 +24,8 @@ public final class VersionHelper {
         discordlink.getLogger().info("Server running version " + version);
         if (version.equals("v1_15_R1")) {
             advancementHelper = new AdvancementHelper_1_15_R1();
+        } else if (version.equals("v1_16_R1")) {
+            advancementHelper = new AdvancementHelper_1_16_R1();
         } else {
             advancementHelper = null;
         }
