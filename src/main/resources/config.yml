@@ -9,6 +9,12 @@
 ####################
 lang: en
 
+######################
+#     Configured     #
+######################
+# Set this to true once you have configured the configuration.
+configured: false
+
 ####################
 #     Webhooks     #
 ####################

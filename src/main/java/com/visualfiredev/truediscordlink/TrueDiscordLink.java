@@ -57,6 +57,13 @@ public class TrueDiscordLink extends JavaPlugin {
             return;
         }
 
+        // Check if Configured
+        if (!this.getConfig().getBoolean("configured")) {
+            this.getLogger().warning("TrueDiscordLink has not been configured! Configure the config.yml file and then reload the plugin.");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         // Register Executors & Tab Completers
         PluginCommand cmdTrueDiscordLink = Objects.requireNonNull(this.getCommand("truediscordlink"));
         cmdTrueDiscordLink.setExecutor(new CommandTrueDiscordLink());
@@ -119,6 +126,11 @@ public class TrueDiscordLink extends JavaPlugin {
     // Plugin Disable Listener
     @Override
     public void onDisable() {
+        // Check if Configured
+        if (!this.getConfig().getBoolean("configured")) {
+            return;
+        }
+
         // Send Shutdown Message
         if (this.getConfig().getBoolean("events.server_shutdown")) {
             manager.sendDiscordMessage(getLangString("events.server_shutdown"), true);
