@@ -50,6 +50,9 @@ bot:
   # Whether or not the bot should re-send edited Discord messages with an asterisk at the end.
   show_edits: true
 
+  # Whether or not discord users should be able to send messages using color codes
+  allow_colors: true
+
   # The token of the bot that should be used.
   token: "INSERT_TOKEN_HERE"
 

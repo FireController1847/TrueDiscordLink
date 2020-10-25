@@ -23,11 +23,16 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TrueDiscordLink extends JavaPlugin {
 
     // Static Variables
     private static TrueDiscordLink instance;
+
+    // Hex Pattern
+    public static final Pattern HEX_PATTERN = Pattern.compile("§#(\\w{5}[0-9a-f])");
 
     // Instance Variables
     private FileConfiguration lang;
@@ -256,7 +261,7 @@ public class TrueDiscordLink extends JavaPlugin {
         }
 
         if (colors) {
-            return ChatColor.translateAlternateColorCodes('&', value);
+            return translateHexCodes(value);
         } else {
             return value;
         }
@@ -269,6 +274,28 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public final String getLangString(String key) {
         return this.getLangString(key, true);
+    }
+
+    // Utility method to translate hex codes to color codes
+    // Special thanks to the Spigot community!
+    // https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867795
+    public static String translateHexCodes(String text) {
+        Matcher matcher = HEX_PATTERN.matcher(text);
+        StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of("#" + matcher.group(1)).toString());
+        }
+        return ChatColor.translateAlternateColorCodes('§', matcher.appendTail(buffer).toString());
+    }
+
+    // Utility method to strip hex codes and color codes
+    public static String stripHexCodes(String text) {
+        Matcher matcher = HEX_PATTERN.matcher(text);
+        StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, "");
+        }
+        return ChatColor.stripColor(matcher.appendTail(buffer).toString());
     }
 
     // Getters

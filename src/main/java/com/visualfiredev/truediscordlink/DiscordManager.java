@@ -54,7 +54,11 @@ public class DiscordManager {
         if (channelIds.size() > 0) {
 
             // Filter colors
-            String content = EmojiParser.parseToAliases(message.getReadableContent().replace("§", "&"));
+            String rawContent = message.getReadableContent();
+            if (!discordlink.getConfig().getBoolean("bot.allow_colors")) {
+                rawContent = TrueDiscordLink.stripHexCodes(rawContent);
+            }
+            String content = EmojiParser.parseToAliases(rawContent);
 
             // Alert Users who might have been tagged & append asterisk for edits
             if (discordlink.getConfig().getBoolean("tagging.mention_minecraft_users")) {
@@ -117,7 +121,7 @@ public class DiscordManager {
                     // Send Message
                     discordlink.getServer().spigot().broadcast(txtMessage);
                 } else {
-                    discordlink.getServer().broadcastMessage(discordlink.getLangString("messages.receive_format", false,
+                    discordlink.getServer().broadcastMessage(discordlink.getLangString("messages.receive_format", true,
                             new String[]{"%username", message.getAuthor().getName()},
                             new String[]{"%nickname", message.getAuthor().getDisplayName()},
                             new String[]{"%discriminator", message.getAuthor().getDiscriminator().toString()},
@@ -168,7 +172,7 @@ public class DiscordManager {
             for (long channelId : discordlink.getConfig().getLongList("bot.relay_channels")) {
                 discordlink.getDiscord().getTextChannelById(channelId).ifPresent(channel -> {
                     if (player != null) {
-                        CompletableFuture<Message> future = channel.sendMessage(discordlink.getLangString("messages.bot_relay_format", false,
+                        CompletableFuture<Message> future = channel.sendMessage(discordlink.getLangString("messages.bot_relay_format", true,
                             new String[] { "%name", player.getName() },
                             new String[] { "%displayname", player.getDisplayName() },
                             new String[] { "%uuid", player.getUniqueId().toString() },

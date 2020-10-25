@@ -17,13 +17,13 @@
 # - %id: The ID of a Discord user
 
 # Not all arguments work for every item.
-# Colors are accepted!
-# Receive formats must use the following character for colors: §
+# Colors are accepted! Use the following character as the prefix: §
+# Hex codes are supported! Use them in the following format: §#000000
 
-prefix: "[&bDiscordLink&r]"
-no_permission: "&cYou do not have permission to run this command!"
+prefix: "[§bDiscordLink§r]"
+no_permission: "§cYou do not have permission to run this command!"
 config:
-  error: "%prefix &cThere was an error loading the configuration!"
+  error: "%prefix §cThere was an error loading the configuration!"
   reloaded: "%prefix Configuration reloaded!"
 messages:
   receive_format: "%prefix <%nickname> %message"
@@ -32,8 +32,8 @@ messages:
   webhook_relay_format: "%message"
   bot_relay_format: "**%name** >> %message"
 tagging:
-  minecraft_mention_color: "&a@%name&r"
-  discord_mention_color: "&a@%name&r"
+  minecraft_mention_color: "§a@%name§r"
+  discord_mention_color: "§a@%name§r"
 events:
   server_start: "**The server has started! :green_circle:**"
   server_shutdown: "**The server has been shut down! :red_circle:**"
