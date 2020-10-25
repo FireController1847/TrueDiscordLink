@@ -100,7 +100,7 @@
                                     <directory>${project.build.directory}</directory>
                                     <filtering>false</filtering>
                                     <includes>
-                                        <include>${project.name}-${project.version}.jar</include>
+                                        <include>${project.name}-${project.version}-Unshaded.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
