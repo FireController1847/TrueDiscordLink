@@ -166,7 +166,7 @@ public class DiscordManager {
 
     // Sends a message to the Discord server via a bot
     private void sendBotMessage(final String content, boolean blocking, Player player) {
-        if (discordlink.getConfig().getBoolean("bot.enabled")) {
+        if (discordlink.getConfig().getBoolean("bot.enabled") && discordlink.getDiscord() != null) {
 
             // Find Channel & Send Message
             for (long channelId : discordlink.getConfig().getLongList("bot.relay_channels")) {

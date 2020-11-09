@@ -59,6 +59,16 @@
                 </executions>
                 <configuration>
                     <outputFile>./target/${project.name}-${project.version}.jar</outputFile>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
             </plugin>
 
@@ -116,11 +126,15 @@
     <!-- Dependencies -->
     <dependencies>
 
+        <!-- \\\\\\\\\\\\\\\\\\ -->
+        <!-- BUILD DEPENDENCIES -->
+        <!-- \\\\\\\\\\\\\\\\\\ -->
+
         <!-- SpigotMC -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.3-R0.1-SNAPSHOT</version>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -155,21 +169,17 @@
             <systemPath>${project.basedir}/spigot-1_16_R2.jar</systemPath>
         </dependency>
 
+        <!-- \\\\\\\\\\\\ -->
+        <!-- DEPENDENCIES -->
+        <!-- \\\\\\\\\\\\ -->
+
         <!-- Javacord -->
         <dependency>
             <groupId>org.javacord</groupId>
             <artifactId>javacord</artifactId>
-            <version>3.0.5</version>
+            <version>3.1.1</version>
             <scope>compile</scope>
             <type>pom</type>
-        </dependency>
-
-        <!-- Placholder API -->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Emoji Java -->
@@ -178,6 +188,18 @@
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- \\\\\\\\\\ -->
+        <!-- EXTENSIONS -->
+        <!-- \\\\\\\\\\ -->
+
+        <!-- Placholder API -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
