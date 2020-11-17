@@ -34,7 +34,7 @@ webhooks:
   # The URL that should be used for providing the skins to the webhook for each user.
   # %uuid is replaced with the user's uuid.
   # %name is replaced with the user's name.
-  skins_url: https://minotar.net/helm/%uuid/2048
+  skins_url: https://minotar.net/helm/%uuid/2048.png
 
 ###############
 #     Bot     #
