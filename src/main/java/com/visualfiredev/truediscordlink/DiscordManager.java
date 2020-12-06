@@ -80,6 +80,10 @@ public class DiscordManager {
 
                     // Send Startup Message
                     sendStartupMessage();
+
+                    // Begin Loops
+                    activityLoop(0);
+                    channelTopicLoop();
                 }).exceptionally(ExceptionLogger.get());
             } else {
                 // Send Startup Message (via webhook)
