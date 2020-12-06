@@ -55,6 +55,9 @@ bot:
   # Whether or not discord users should be able to send messages using color codes
   allow_colors: true
 
+  # The token of the bot that should be used.
+  token: "INSERT_TOKEN_HERE"
+
   # A list of channel ids that should receive messages from the Minecraft server.
   # Leave blank to disable receiving messages from the Minecraft server.
   # Useful if you want to use webhooks in combination with a bot.
