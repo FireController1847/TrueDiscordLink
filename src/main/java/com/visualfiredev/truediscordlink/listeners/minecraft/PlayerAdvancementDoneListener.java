@@ -1,10 +1,11 @@
-package com.visualfiredev.truediscordlink.listeners;
+package com.visualfiredev.truediscordlink.listeners.minecraft;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import com.visualfiredev.truediscordlink.VersionHelper;
 import com.visualfiredev.truediscordlink.nms.advancement.IAdvancementHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import java.util.Arrays;
@@ -12,48 +13,48 @@ import java.util.stream.Collectors;
 
 public class PlayerAdvancementDoneListener implements Listener {
 
-    // Instance Variables
-    private final TrueDiscordLink discordlink;
+    // Variables
+    private TrueDiscordLink discordlink;
 
     // Constructor
     public PlayerAdvancementDoneListener(TrueDiscordLink discordlink) {
         this.discordlink = discordlink;
     }
 
-    // Event Handler
     @EventHandler
-    public void onPlayerAvancementDone(PlayerAdvancementDoneEvent event) {
+    public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event) {
+        // Check Enabled
         if (!discordlink.getConfig().getBoolean("events.player_advance")) {
             return;
         }
 
-        // Check if advancement is a recipe, if so then return
+        // If the advancement is a recipe, return
         if (event.getAdvancement().getKey().getKey().contains("recipes/")) {
             return;
         }
 
-        // Fetch Advancement Name & Description
-        IAdvancementHelper advancementHelper = VersionHelper.getInstance().getAdvancementHelper();
+        // Fetch Name & Description
+        IAdvancementHelper helper = discordlink.getVersionHelper().getAdvancementHelper();
         String name;
         String description;
-        if (advancementHelper != null) {
-            name = advancementHelper.getName(event.getAdvancement());
-            description = advancementHelper.getDescription(event.getAdvancement());
+        if (helper != null) {
+            name = helper.getName(event.getAdvancement());
+            description = helper.getDescription(event.getAdvancement());
         } else {
             String rawName = event.getAdvancement().getKey().getKey();
             name = Arrays.stream(rawName.substring(rawName.lastIndexOf('/') + 1).toLowerCase().split("_")).map(word -> word.substring(0, 1).toUpperCase() + word.substring(1)).collect(Collectors.joining());
-            description = "";
+            description = "Unable to fetch description.";
         }
 
+        // Send Discord Message
         discordlink.getDiscordManager().sendDiscordMessage(
-            discordlink.getLangString("events.player_advance", false,
-                new String[] { "%name", event.getPlayer().getName() },
-                new String[] { "%displayname", event.getPlayer().getDisplayName() },
-                new String[] { "%uuid", event.getPlayer().getUniqueId().toString() },
-                new String[] { "%advancement_name", name },
-                new String[] { "%advancement_description", description }
-            ),
-            null
+            discordlink.getTranslation("events.player_advance", false,
+                new String[] { "%name%", event.getPlayer().getName() },
+                new String[] { "%displayName%", event.getPlayer().getDisplayName() },
+                new String[] { "%uuid%", event.getPlayer().getUniqueId().toString() },
+                new String[] { "%advancement_name%", name },
+                new String[] { "%advancement_description%", description }
+            )
         );
     }
 

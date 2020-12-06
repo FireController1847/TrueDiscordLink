@@ -1,30 +1,32 @@
-package com.visualfiredev.truediscordlink.listeners;
+package com.visualfiredev.truediscordlink.listeners.minecraft;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.ArrayList;
 
 public class PlayerChatListener implements Listener {
 
-    // Instance Variables
-    private final TrueDiscordLink discordlink;
+    // Variables
+    private TrueDiscordLink discordlink;
 
     // Constructor
     public PlayerChatListener(TrueDiscordLink discordlink) {
         this.discordlink = discordlink;
     }
 
-    // Event Handler
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        // Send Discord Message
         ArrayList<String[]> modifications = discordlink.getDiscordManager().sendDiscordMessage(event.getMessage(), false, event.getPlayer());
+
+        // Apply Modifications
         if (modifications != null) {
             for (String[] modification : modifications) {
-                event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage().replace(modification[0], modification[1])));
+                event.setMessage(TrueDiscordLink.translateColorCodes('&', event.getMessage().replace(modification[0], modification[1])));
             }
         }
     }

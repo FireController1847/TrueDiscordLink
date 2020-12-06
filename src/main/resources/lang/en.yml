@@ -1,43 +1,40 @@
-# Valid Arguments:
-# GENERIC:
-# - %prefix: The prefix of the plugin
-# - %message: The content of the message
+# Global Arguments:
+# - %prefix%: The prefix of the plugin
+# - %message%: The content of a message
+# - %name%: A raw username for both Minecraft and Discord (no nickname or modifiers)
 #
-# MINECRAFT:
-# - %name: The name of a Minecraft user
-# - %displayname: The display name (including prefix & colors) of a Minecraft user
-# - %uuid: The UUID of a Minecraft user
-# - %advancement_name: The name of the advancement achieved
-# - %advancement_description: The description of the advancement achieved
+# Minecraft Arguments:
+# - %displayName%: The displayName of a player
+# - %uuid%: The UUID of a player
+# - %advancement_name%: The name of a Minecraft advancement
+# - %advancement_description%: The description of a Minecraft advancement
 #
-# DISCORD:
-# - %username: The username of a Discord user
-# - %nickname: The nickname of a Discord user
-# - %discriminator: The discriminator of a Discord user
-# - %id: The ID of a Discord user
-
+# Discord Arguments:
+# - %nickname%: The nickname of a user, otherwise the username if no nickname is present
+# - %discriminator%: The discriminator of a user
+# - %id%: The ID of a user
+#
 # Not all arguments work for every item.
 # Colors are accepted! Use the following character as the prefix: §
 # Hex codes are supported! Use them in the following format: §#000000
-
 prefix: "[§bDiscordLink§r]"
 no_permission: "§cYou do not have permission to run this command!"
 config:
-  error: "%prefix §cThere was an error loading the configuration!"
-  reloaded: "%prefix Configuration reloaded!"
+  error: "%prefix% §cThere was an error loading the configuration!"
+  reloaded: "%prefix% Configuration reloaded!"
 messages:
-  receive_format: "%prefix <%nickname> %message"
-  receive_attachment_format: "%prefix <%nickname> §9§n%message"
-  receive_attachment_placeholder: "§9§nOpen Attachment"
-  webhook_relay_format: "%message"
-  bot_relay_format: "**%name** >> %message"
+  to_mc_format: "%prefix% <%nickname%> %message%"
+  to_mc_attachment_format: "%prefix% <%nickname%> §9§n%message%"
+  to_mc_attachment_placeholder: "§9§nOpen Attachment"
+  from_mc_webhook_format: "%message%"
+  from_mc_bot_format: "**%name%** >> %message%"
 tagging:
-  minecraft_mention_color: "§a@%name§r"
-  discord_mention_color: "§a@%name§r"
+  minecraft_mention_color: "§a@%name%§r"
+  discord_mention_color: "§a@%name%§r"
 events:
   server_start: "**The server has started! :green_circle:**"
   server_shutdown: "**The server has been shut down! :red_circle:**"
-  player_join: "**%name has joined the game!**"
-  player_quit: "**%name has left the game!**"
-  player_death: "**%message**"
-  player_advance: "**%name has made the advancement** ***%advancement_name***"
+  player_join: "**%name% has joined the game!**"
+  player_quit: "**%name% has left the game!**"
+  player_death: "**%message%**"
+  player_advance: "**%name% has made the advancement** ***%advancement_name%***"

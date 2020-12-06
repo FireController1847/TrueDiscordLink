@@ -7,6 +7,8 @@
 ####################
 #     Language     #
 ####################
+# The name of the file in the lang/ folder to use for configuration.
+# Default is en which results in lang/en.yml
 lang: en
 
 ######################
@@ -34,7 +36,7 @@ webhooks:
   # The URL that should be used for providing the skins to the webhook for each user.
   # %uuid is replaced with the user's uuid.
   # %name is replaced with the user's name.
-  skins_url: https://minotar.net/helm/%uuid/2048.png
+  skins_url: https://minotar.net/helm/%uuid%/2048.png
 
 ###############
 #     Bot     #
@@ -53,17 +55,15 @@ bot:
   # Whether or not discord users should be able to send messages using color codes
   allow_colors: true
 
-  # The token of the bot that should be used.
-  token: "INSERT_TOKEN_HERE"
-
   # A list of channel ids that should receive messages from the Minecraft server.
-  # Leave blank to disable sending messages via the bot.
-  receive_channels:
+  # Leave blank to disable receiving messages from the Minecraft server.
+  # Useful if you want to use webhooks in combination with a bot.
+  from_mc_channels:
     - 000000000000000000
 
-  # A list of channel ids that should send messages to the Minecraft server.
-  # Leave blank to disable receiving messages via the bot. Useful if you want to use webhooks in combination with a bot.
-  relay_channels:
+  # A list of channel ids to watch for when messages are sent to send them to the Minecraft server.
+  # Leave blank to disable sending messages to the Minecraft server.
+  to_mc_channels:
     - 000000000000000000
 
   # Options related to the Discord server that become available when using a bot
@@ -120,24 +120,25 @@ events:
 #     Tagging     #
 ###################
 tagging:
-  # Whether or not to filter out ANY phrases starting with @ (prevents any mentions in Discord).
-  enable_tagging: true
+  # Whether or not to allow Minecraft users to tag Discord users
+  enable_user_tagging: true
 
-  # Whether or not to filter out @here and @everyone.
-  enable_everyone_tagging: false
+  # Enables detection of attempted tags to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
+  # If enable_user_tagging is enabled, you probably want this enabled to.
+  # This only works if bot.enabled is set to true.
+  enable_user_tagging_shortcut: true
 
-  # Whether or not to filter out ANY phrases starting with @& (prevents role mentions in Discord.)
+  # Whether or not to allow Minecraft users to tag Discord roles
   enable_role_tagging: false
+
+  # Whether or not to allow Minecraft users to tag Discord's @everyone and @here
+  enable_everyone_tagging: false
 
   # Whether or not to make a noise & show chat color when a Minecraft user's username is said in Discord.
   mention_minecraft_users: true
 
   # Don't change this unless you know exactly what it should be.
   mention_minecraft_noise: "ENTITY_EXPERIENCE_ORB_PICKUP"
-
-  # Whether or not to identify any attempted tags (@Fire) and convert them into mentions on Discord.
-  # Only works if a bot is enabled because it needs to be aware of what users there are in the Discord server.
-  mention_discord_users: true
 
   # A list of guild ids to use the member lists from to check for mentions.
   mention_servers:

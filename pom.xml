@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Info -->
-    <groupId>com.visualfiredev</groupId>
-    <artifactId>truediscordlink</artifactId>
-    <version>1.0.0-indev-${git.total.commit.count}</version>
+    <!-- Project Information -->
     <name>TrueDiscordLink</name>
     <description>Provides a link between Discord and your Minecraft server</description>
+    <groupId>com.visualfiredev</groupId>
+    <artifactId>truediscordlink</artifactId>
+    <version>${projectVersion}</version>
+    <packaging>jar</packaging>
 
-    <!-- Repositories -->
+    <!-- Project Properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <actualVersion>1.0.0</actualVersion>
+        <fileVersion>INVALID</fileVersion>
+        <projectVersion>INVALID</projectVersion>
+    </properties>
+
+    <!-- Project Profiles -->
+    <profiles>
+        <!-- Snapshots -->
+        <profile>
+            <id>snapshot</id>
+            <properties>
+                <projectVersion>${actualVersion}-SNAPSHOT</projectVersion>
+                <!--suppress UnresolvedMavenProperty -->
+                <fileVersion>${projectVersion}-${git.commit.id.abbrev}</fileVersion>
+            </properties>
+        </profile>
+
+        <!-- Releases -->
+        <profile>
+            <id>release</id>
+            <properties>
+                <projectVersion>${actualVersion}</projectVersion>
+                <fileVersion>${projectVersion}</fileVersion>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!-- Project Repositories -->
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -23,8 +54,9 @@
         </repository>
     </repositories>
 
-    <!-- Build Settings -->
+    <!-- Build -->
     <build>
+        <finalName>TrueDiscordLink-${fileVersion}-UNSHADED</finalName>
 
         <!-- Plugins -->
         <plugins>
@@ -58,7 +90,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputFile>./target/${project.name}-${project.version}.jar</outputFile>
+                    <outputFile>./target/TrueDiscordLink-${fileVersion}.jar</outputFile>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
@@ -110,7 +142,7 @@
                                     <directory>${project.build.directory}</directory>
                                     <filtering>false</filtering>
                                     <includes>
-                                        <include>${project.name}-${project.version}.jar</include>
+                                        <include>TrueDiscordLink-${fileVersion}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -120,17 +152,29 @@
             </plugin>
 
         </plugins>
-
     </build>
 
     <!-- Dependencies -->
     <dependencies>
 
-        <!-- \\\\\\\\\\\\\\\\\\ -->
-        <!-- BUILD DEPENDENCIES -->
-        <!-- \\\\\\\\\\\\\\\\\\ -->
+        <!-- COMPILE: Javacord -->
+        <dependency>
+            <groupId>org.javacord</groupId>
+            <artifactId>javacord</artifactId>
+            <version>3.1.1</version>
+            <scope>compile</scope>
+            <type>pom</type>
+        </dependency>
 
-        <!-- SpigotMC -->
+        <!-- COMPILE: Emoji Java -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- BUILD: SpigotMC -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -138,7 +182,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Bukkit -->
+        <!-- BUILD: Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
@@ -146,7 +190,15 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- SpigotMC w/ NMS -->
+        <!-- BUILD: PlaceholderAPI -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SYSTEM: SpigotMC w/ NMS -->
         <dependency>
             <groupId>net.minecraft</groupId>
             <artifactId>server</artifactId>
@@ -168,49 +220,14 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/spigot-1_16_R2.jar</systemPath>
         </dependency>
-
-        <!-- \\\\\\\\\\\\ -->
-        <!-- DEPENDENCIES -->
-        <!-- \\\\\\\\\\\\ -->
-
-        <!-- Javacord -->
         <dependency>
-            <groupId>org.javacord</groupId>
-            <artifactId>javacord</artifactId>
-            <version>3.1.1</version>
-            <scope>compile</scope>
-            <type>pom</type>
-        </dependency>
-
-        <!-- Emoji Java -->
-        <dependency>
-            <groupId>com.vdurmont</groupId>
-            <artifactId>emoji-java</artifactId>
-            <version>5.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- \\\\\\\\\\ -->
-        <!-- EXTENSIONS -->
-        <!-- \\\\\\\\\\ -->
-
-        <!-- Placholder API -->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
+            <groupId>net.minecraft...</groupId>
+            <artifactId>server</artifactId>
+            <version>1_16_R3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/spigot-1_16_R3.jar</systemPath>
         </dependency>
 
     </dependencies>
-
-    <!-- Properties -->
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jar.finalName>${project.name}-${project.version}-Unshaded</jar.finalName>
-    </properties>
 
 </project>

@@ -1,9 +1,17 @@
+# Run Information
+api-version: "1.15"
+main: com.visualfiredev.truediscordlink.TrueDiscordLink
+load: POSTWORLD
+softdepend: [PlaceholderAPI]
+
+# Metadata Information
 name: ${project.name}
 version: ${project.version}
 description: ${project.description}
 author: FireController#1847
 website: https://www.visualfiredev.com/
 
+# Commands
 commands:
   truediscordlink:
     description: Lists all of the available commands for the plugin
@@ -15,6 +23,7 @@ commands:
     usage: /truediscordlink reload
     permission: truediscordlink.command.reload
 
+# Permissions
 permissions:
   # Stars
   truediscordlink.*:
@@ -42,8 +51,3 @@ permissions:
   truediscordlink.tagging:
     description: Gives permission to tag users in Discord
     default: true
-
-api-version: "1.15"
-main: com.visualfiredev.truediscordlink.TrueDiscordLink
-load: POSTWORLD
-softdepend: [PlaceholderAPI]

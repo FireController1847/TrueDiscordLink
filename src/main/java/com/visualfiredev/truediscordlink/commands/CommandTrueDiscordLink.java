@@ -1,5 +1,6 @@
 package com.visualfiredev.truediscordlink.commands;
 
+import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,27 +9,15 @@ public class CommandTrueDiscordLink implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        // Main Command
-        if (args.length == 0) {
-            if (!CommandUtil.hasPermission(sender, "truediscordlink.command.discord")) {
-                CommandUtil.tellNoPermission(sender);
-                return true;
+        // Handle Sub-Commands
+        if (args.length > 0) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                return TrueDiscordLink.runCommand(new CommandReload(), "truediscordlink.command.reload", sender, command, label, args);
             }
-
-            return false; // TODO: Return list of commands :)
-
-        // Reload Command
-        } else if (args[0].equalsIgnoreCase("reload")) {
-            if (!CommandUtil.hasPermission(sender, "truediscordlink.command.reload")) {
-                CommandUtil.tellNoPermission(sender);
-                return true;
-            }
-
-            return (new CommandConfigReload()).onCommand(sender, command, label, args);
         }
 
         // If it's not the command or any sub command, return false
+        // TODO: Return a list of commands
         return false;
     }
 

@@ -1,6 +1,6 @@
 package com.visualfiredev.truediscordlink.tabcompleters;
 
-import com.visualfiredev.truediscordlink.commands.CommandUtil;
+import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -12,21 +12,22 @@ import java.util.List;
 
 public class TabCompleterTrueDiscordLink implements TabCompleter {
 
-    private static final String[][] FIRST_ARGS = {
+    // Define Primary Arguments
+    public static final String[][] FIRST_ARGS = {
         { "reload", "truediscordlink.command.reload" }
     };
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         // Completions
-        final List<String> completions = new ArrayList<>();
+        ArrayList<String> completions = new ArrayList();
 
-        // Check for Base Command
+        // First-Level Arguments
         if (args.length == 1) {
-            final List<String> originals = new ArrayList<>();
-            for (final String[] ARG : FIRST_ARGS) {
-                if (CommandUtil.hasPermission(sender, ARG[1])) {
-                    originals.add(ARG[0]);
+            ArrayList<String> originals = new ArrayList<>();
+            for (String[] argument : FIRST_ARGS) {
+                if (TrueDiscordLink.hasPermission(sender, argument[1])) {
+                    originals.add(argument[0]);
                 }
             }
             StringUtil.copyPartialMatches(args[0], originals, completions);

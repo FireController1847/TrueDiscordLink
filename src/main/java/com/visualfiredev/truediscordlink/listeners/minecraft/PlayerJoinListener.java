@@ -1,4 +1,4 @@
-package com.visualfiredev.truediscordlink.listeners;
+package com.visualfiredev.truediscordlink.listeners.minecraft;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import org.bukkit.event.EventHandler;
@@ -7,8 +7,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    // Static Variables
-    private static TrueDiscordLink discordlink;
+    // Variables
+    private TrueDiscordLink discordlink;
 
     // Constructor
     public PlayerJoinListener(TrueDiscordLink discordlink) {
@@ -17,17 +17,18 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        // Check Enabled
         if (!discordlink.getConfig().getBoolean("events.player_join")) {
             return;
         }
 
+        // Send Discord Message
         discordlink.getDiscordManager().sendDiscordMessage(
-            discordlink.getLangString("events.player_join", false,
-                new String[] { "%name", event.getPlayer().getName() },
-                new String[] { "%displayname", event.getPlayer().getDisplayName() },
-                new String[] { "%uuid", event.getPlayer().getUniqueId().toString() }
-            ),
-            null
+            discordlink.getTranslation("events.player_join", false,
+                new String[] { "%name%", event.getPlayer().getName() },
+                new String[] { "%displayName%", event.getPlayer().getDisplayName() },
+                new String[] { "%uuid%", event.getPlayer().getUniqueId().toString() }
+            )
         );
     }
 

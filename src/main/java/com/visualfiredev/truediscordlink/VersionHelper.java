@@ -1,23 +1,16 @@
 package com.visualfiredev.truediscordlink;
 
-import com.visualfiredev.truediscordlink.nms.advancement.AdvancementHelper_1_15_R1;
-import com.visualfiredev.truediscordlink.nms.advancement.AdvancementHelper_1_16_R1;
-import com.visualfiredev.truediscordlink.nms.advancement.AdvancementHelper_1_16_R2;
-import com.visualfiredev.truediscordlink.nms.advancement.IAdvancementHelper;
+import com.visualfiredev.truediscordlink.nms.advancement.*;
 import org.bukkit.Bukkit;
 
-public final class VersionHelper {
+public class VersionHelper {
 
-    // Static Variables
-    private static VersionHelper instance;
-
-    // Instance Variables
+    // Variables
     private TrueDiscordLink discordlink;
     private IAdvancementHelper advancementHelper;
 
     // Constructor
     protected VersionHelper(TrueDiscordLink discordlink) {
-        instance = this;
         this.discordlink = discordlink;
 
         // Create & Load In Classes
@@ -29,16 +22,14 @@ public final class VersionHelper {
             advancementHelper = new AdvancementHelper_1_16_R1();
         } else if (version.equals("v1_16_R2")) {
             advancementHelper = new AdvancementHelper_1_16_R2();
+        } else if (version.equals("v1_16_R3")) {
+            advancementHelper = new AdvancementHelper_1_16_R3();
         } else {
             advancementHelper = null;
         }
-
     }
 
     // Getters
-    public static VersionHelper getInstance() {
-        return instance;
-    }
     public IAdvancementHelper getAdvancementHelper() {
         return advancementHelper;
     }
