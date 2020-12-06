@@ -74,8 +74,10 @@ public class TrueDiscordLink extends JavaPlugin {
     // On Disable
     @Override
     public void onDisable() {
-        // Disable Discord Manager
-        discordManager.shutdown();
+        if (this.getConfig().getBoolean("configured")) {
+            // Disable Discord Manager
+            discordManager.shutdown();
+        }
 
         // Log Disabled
         this.getLogger().info("Disabled TrueDiscordLink!");
