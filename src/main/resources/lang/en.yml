@@ -38,3 +38,6 @@ events:
   player_quit: "**%name% has left the game!**"
   player_death: "**%message%**"
   player_advance: "**%name% has made the advancement** ***%advancement_name%***"
+linking:
+  success: "Congratulations! Your §2Minecraft§r and §2Discord§r accounts are now linked!"
+  failure: "There was an internal error while linking your §2Minecraft§r and §2Discord§r accounts."

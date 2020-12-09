@@ -28,6 +28,7 @@ public class TrueDiscordLink extends JavaPlugin {
     private FileConfiguration translations;
     private VersionHelper versionHelper;
     private DiscordManager discordManager;
+    private DatabaseManager databaseManager;
 
     // Constructor
     public TrueDiscordLink() {
@@ -54,6 +55,9 @@ public class TrueDiscordLink extends JavaPlugin {
         // Initialize Discord Manager
         discordManager = new DiscordManager(this);
 
+        // Initialize Database Manager
+        databaseManager = new DatabaseManager(this);
+
         // Register Commands
         PluginCommand cmdtdl = Objects.requireNonNull(this.getCommand("truediscordlink"));
         cmdtdl.setExecutor(new CommandTrueDiscordLink());
@@ -77,6 +81,9 @@ public class TrueDiscordLink extends JavaPlugin {
         if (this.getConfig().getBoolean("configured")) {
             // Disable Discord Manager
             discordManager.shutdown();
+
+            // Disable Database Manager
+            databaseManager.disconnect();
         }
 
         // Log Disabled
@@ -225,6 +232,9 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public DiscordManager getDiscordManager() {
         return discordManager;
+    }
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
 }

@@ -18,6 +18,10 @@ public class CommandReload implements CommandExecutor {
         discordlink.getDiscordManager().activityLoop(0);
         discordlink.getDiscordManager().channelTopicLoop();
 
+        // Reconnect database
+        discordlink.getDatabaseManager().disconnect();
+        discordlink.getDatabaseManager().connect();
+
         // Send notification message
         sender.sendMessage(discordlink.getTranslation("config.reloaded"));
 
