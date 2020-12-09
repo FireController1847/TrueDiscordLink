@@ -39,5 +39,18 @@ events:
   player_death: "**%message%**"
   player_advance: "**%name% has made the advancement** ***%advancement_name%***"
 linking:
-  success: "Congratulations! Your §2Minecraft§r and §2Discord§r accounts are now linked!"
-  failure: "There was an internal error while linking your §2Minecraft§r and §2Discord§r accounts."
+  disabled: "%prefix% §cLinking accounts has been disabled on this server."
+  waiting: "%prefix% Processing request..."
+  failure: "%prefix% There was an internal error while unlinking or linking your §2Minecraft§r and §2Discord§r accounts."
+  exists: "%prefix% You have already linked your account!"
+  does_not_exist: "%prefix% Your account is not linked!"
+  unlink: "%prefix% You have successfully unlinked your account."
+  minecraft:
+    question: "%prefix% Are you §2%message%§r? Run §2/tdl link yes§r to confirm or §2/tdl link no§r if you're someone else."
+    i_am_not: "%prefix% Run §2/tdl link§r again, but this time with the first few letters of your Discord username."
+    missing: "%prefix% I was unable to find a user by that username. Please run the command again, but this time with the first few letters of your Discord username."
+    check_discord: "%prefix% Check Discord to complete the linking process. If you did not receive a DM, ensure DMs are enabled on the server, and then run this command again."
+  discord:
+    request: "You have received a request to link your Minecraft and Discord accounts. Respond with %discord_prefix%link confirm to confirm, or ignore this message to deny."
+    no_request: "You do not currently have a request to link your accounts. Make sure to run the `/tdl link` command in Minecraft first!"
+    success: "Congratulations! Your Minecraft and Discord accounts are now linked!"

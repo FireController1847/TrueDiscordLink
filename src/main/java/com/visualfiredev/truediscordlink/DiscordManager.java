@@ -22,6 +22,7 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.util.logging.ExceptionLogger;
 
@@ -67,7 +68,7 @@ public class DiscordManager {
             if (discordlink.getConfig().getBoolean("bot.enabled")) {
                 new DiscordApiBuilder()
                         .setToken(discordlink.getConfig().getString("bot.token"))
-                        .setIntents(Intent.GUILDS, Intent.GUILD_MESSAGES, Intent.GUILD_MEMBERS)
+                        .setIntents(Intent.GUILDS, Intent.GUILD_MESSAGES, Intent.GUILD_MEMBERS, Intent.DIRECT_MESSAGES)
                         .login().thenAcceptAsync(api -> {
                     this.api = api;
 
@@ -453,45 +454,50 @@ public class DiscordManager {
                 // Attempt to find server
                 api.getServerById(serverId).ifPresent(server -> {
 
-                    // Search for user in members
-                    Collection<User> users = server.getMembers();
-                    for (User user : users) {
-                        String usernameLower = username.toLowerCase();
-                        String nameLower = user.getName().toLowerCase();
-                        String nicknameLower = user.getNickname(server).orElse(null);
-                        if (nicknameLower != null) {
-                            nicknameLower = nicknameLower.toLowerCase();
-                        }
+                    // Get partially matching users
+                    ArrayList<User> users = getUsersPartiallyMatching(server, username, true);
+                    if (users.size() > 0) {
+                        User user = users.get(0);
 
-                        boolean isMatch = false;
-                        // Check for an exact match
-                        if (usernameLower.equals(nameLower) || usernameLower.equals(nicknameLower)) {
-                            isMatch = true;
-
-                        // Check for partial match
-                        } else if (
-                            (usernameLower.length() > 3 && (nameLower.startsWith(usernameLower))) ||
-                            (nicknameLower != null && nicknameLower.length() > 3 && nicknameLower.startsWith(usernameLower))
-                        ) {
-                            isMatch = true;
-                        }
-
-                        // Replace match
-                        if (isMatch) {
-                            content.set(content.get().replace(match, "<@" + user.getId() + ">"));
-                            String translation = discordlink.getTranslation("tagging.minecraft_mention_color", true,
-                                new String[] { "%name%", user.getName() },
-                                new String[] { "%nickname%", user.getNickname(server).orElse(user.getName()) }
-                            );
-                            modifications.get().add(
-                                new String[] { match, translation }
-                            );
-                            break; // Break the user loop, we found em'
-                        }
+                        content.set(content.get().replace(match, "<@" + user.getId() + ">"));
+                        String translation = discordlink.getTranslation("tagging.minecraft_mention_color", true,
+                            new String[] { "%name%", user.getName() },
+                            new String[] { "%nickname%", user.getNickname(server).orElse(user.getName()) }
+                        );
+                        modifications.get().add(
+                            new String[] { match, translation }
+                        );
                     }
                 });
             }
         }
+    }
+
+    public static ArrayList<User> getUsersPartiallyMatching(Server server, String partialUsername, boolean firstOnly) {
+        Collection<User> users = server.getMembers();
+        ArrayList<User> matchingUsers = new ArrayList<>();
+        for (User user : users) {
+            String name = user.getName();
+            String nickname = user.getNickname(server).orElse("");
+            boolean added = false;
+
+            // Check for exact match
+            if (partialUsername.equalsIgnoreCase(user.getIdAsString()) || partialUsername.equalsIgnoreCase(name) || partialUsername.equalsIgnoreCase(nickname)) {
+                matchingUsers.add(user);
+                added = true;
+
+            // Check for partial match
+            } else if (partialUsername.length() > 3 && (name.toLowerCase().startsWith(partialUsername.toLowerCase()) || nickname.toLowerCase().startsWith(partialUsername.toLowerCase()))) {
+                matchingUsers.add(user);
+                added = true;
+
+            }
+
+            if (added && firstOnly) {
+                break;
+            }
+        }
+        return matchingUsers;
     }
 
     // The loop to keep the bot's activity up to date

@@ -22,6 +22,14 @@ commands:
     description: Reloads the configuration files
     usage: /truediscordlink reload
     permission: truediscordlink.command.reload
+  truediscordlink link:
+    description: Links a Minecraft account and Discord account
+    usage: /truediscordlink link
+    permission: truediscordlink.command.link
+  truediscordlink unlink:
+    description: Unlinks a Minecraft account and Discord account
+    usage: /truediscordlink unlink
+    permission: truediscordlink.command.unlink
 
 # Permissions
 permissions:
@@ -38,6 +46,8 @@ permissions:
     children:
       truediscordlink.command.discord: true
       truediscordlink.command.reload: true
+      truediscordlink.command.link: true
+      truediscordlink.command.unlink: true
 
   # Commands
   truediscordlink.command.discord:
@@ -46,6 +56,12 @@ permissions:
   truediscordlink.command.reload:
     description: Gives permission to the reload command
     default: op
+  truediscordlink.command.link:
+    description: Gives permission to link a user account
+    default: true
+  truediscordlink.command.unlink:
+    description: Gives permission to unlink a user account
+    default: true
 
   # Features
   truediscordlink.tagging:

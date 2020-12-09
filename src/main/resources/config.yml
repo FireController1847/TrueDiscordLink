@@ -109,6 +109,12 @@ bot:
   # A list of options that allow you to link accounts between a Discord server and Minecraft
   linking:
 
+    # Whether or not the linking of user accounts is enabled
+    enabled: true
+
+    # The id of the server to search through the players list for
+    server: '000000000000000000'
+
     # A list of roles to give users after they have linked their account
     # In the format: 'discord_server_id:role_id'. See https://support.discord.com/hc/en-us/articles/206346498
     roles:
