@@ -113,12 +113,12 @@ bot:
     enabled: true
 
     # The id of the server to search through the players list for
-    server: '000000000000000000'
+    server: "000000000000000000"
 
     # A list of roles to give users after they have linked their account
     # In the format: 'discord_server_id:role_id'. See https://support.discord.com/hc/en-us/articles/206346498
     roles:
-      - '500504661686616085:678110353162502165'
+      - "000000000000000000:000000000000000000"
 
 
 ###########################
@@ -169,17 +169,20 @@ tagging:
 database:
 
   # Possible options: SQLite, MySQL, MariaDB
-  type: 'SQLite'
+  type: "SQLite"
 
   # The host of the database. 'localhost' and '127.0.0.1' both point to the local machine
-  host: '127.0.0.1'
+  host: "127.0.0.1"
 
   # The database to use. Make sure it is created before attempting to connect.
   # Points to a file path from the plugin directory for SQLite. Do not include .db
-  database: 'truediscordlink'
+  database: "truediscordlink"
 
   # The username to use to login to the database. Leave blank for SQLite
-  username: ''
+  username: ""
 
   # The password to use to login to the database. Leave blank for SQLite
-  password: ''
+  password: ""
+
+  # The prefix to prepend to all created tables
+  table_prefix: "tdl_"

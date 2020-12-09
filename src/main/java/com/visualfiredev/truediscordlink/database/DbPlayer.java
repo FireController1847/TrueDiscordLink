@@ -11,14 +11,16 @@ import com.visualfiredev.truediscordlink.TrueDiscordLink;
 public class DbPlayer extends DatabaseObject {
 
     // Table Schemas
-    public static final TableSchema TABLE_SCHEMA_SQLITE = new TableSchema("players",
+    // They're not final because they get modified by the DatabaseManager, but everywhere else they
+    // can be considered effectively final
+    public static TableSchema TABLE_SCHEMA_SQLITE = new TableSchema("players",
         new ColumnSchema("id", DataType.INTEGER).setPrimaryKey(true).setAutoIncrement(true),
         new ColumnSchema("name", DataType.TEXT),
         new ColumnSchema("minecraft_uuid", DataType.TEXT).setUniqueKey(true),
         new ColumnSchema("discord_id", DataType.TEXT),
         new ColumnSchema("linked", DataType.INTEGER)
     );
-    public static final TableSchema TABLE_SCHEMA_MYSQL = new TableSchema("players",
+    public static TableSchema TABLE_SCHEMA_MYSQL = new TableSchema("players",
         new ColumnSchema("id", DataType.INTEGER).setPrimaryKey(true).setAutoIncrement(true),
         new ColumnSchema("name", DataType.VARCHAR, 16),
         new ColumnSchema("minecraft_uuid", DataType.VARCHAR, 36).setUniqueKey(true),

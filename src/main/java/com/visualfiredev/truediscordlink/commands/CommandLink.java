@@ -38,9 +38,6 @@ public class CommandLink implements CommandExecutor {
         Player player = (Player) sender;
         Database database = discordlink.getDatabaseManager().getDatabase();
 
-        // Send processing because sometimes it can take a long time
-        sender.sendMessage(discordlink.getTranslation("linking.waiting"));
-
         // Check if user is in database
         try {
             ArrayList<DbPlayer> results;

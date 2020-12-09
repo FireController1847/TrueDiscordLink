@@ -40,7 +40,6 @@ events:
   player_advance: "**%name% has made the advancement** ***%advancement_name%***"
 linking:
   disabled: "%prefix% §cLinking accounts has been disabled on this server."
-  waiting: "%prefix% Processing request..."
   failure: "%prefix% There was an internal error while unlinking or linking your §2Minecraft§r and §2Discord§r accounts."
   exists: "%prefix% You have already linked your account!"
   does_not_exist: "%prefix% Your account is not linked!"

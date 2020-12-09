@@ -33,10 +33,7 @@ public class CommandUnlink implements CommandExecutor {
 
         // Fetch database & player
         Player player = (Player) sender;
-        Database database = discordlink.getDatabaseManager().getDatabase();
-
-        // Send processing because sometimes it can take a long time
-        sender.sendMessage(discordlink.getTranslation("linking.waiting"));
+        Database database = discordlink.getDatabaseManager().getDatabase();;
 
         try {
             ArrayList<DbPlayer> results;

@@ -14,6 +14,7 @@ public class DatabaseManager {
     private TrueDiscordLink discordlink;
     private Database database;
     private AtomicBoolean connected = new AtomicBoolean(false);
+    private boolean initialized = false;
 
     // Constructor
     public DatabaseManager(TrueDiscordLink discordlink) {
@@ -28,9 +29,20 @@ public class DatabaseManager {
         // Create database if one doesn't already exist
         if (this.database == null) {
             String host = Objects.requireNonNull(discordlink.getConfig().getString("database.host"));
-            String database = new File(discordlink.getDataFolder(), "/" + Objects.requireNonNull(discordlink.getConfig().getString("database.database")) + ".db").getAbsolutePath();
-            String type = Objects.requireNonNull(discordlink.getConfig().getString("database.type"));
-            this.database = new Database(host, database, DatabaseType.valueOf(type));
+            DatabaseType type = DatabaseType.valueOf(Objects.requireNonNull(discordlink.getConfig().getString("database.type")));
+            String database;
+            if (type == DatabaseType.SQLite) {
+                database = new File(discordlink.getDataFolder(), "/" + Objects.requireNonNull(discordlink.getConfig().getString("database.database"))).getAbsolutePath();
+            } else {
+                database = Objects.requireNonNull(discordlink.getConfig().getString("database.database"));
+            }
+
+            // Add SQLite ".db"
+            if (type == DatabaseType.SQLite) {
+                database += ".db";
+            }
+
+            this.database = new Database(host, database, type);
         }
 
         // Connect
@@ -57,6 +69,16 @@ public class DatabaseManager {
     // Initializes the main tables of the database
     public void initialize() {
         try {
+            if (!initialized) {
+                // Handle Prefixes
+                String prefix = discordlink.getConfig().getString("database.table_prefix");
+                if (prefix != null) {
+                    DbPlayer.TABLE_SCHEMA_MYSQL = DbPlayer.TABLE_SCHEMA_MYSQL.clone().setName(prefix + DbPlayer.TABLE_SCHEMA_MYSQL.getName());
+                    DbPlayer.TABLE_SCHEMA_SQLITE = DbPlayer.TABLE_SCHEMA_SQLITE.clone().setName(prefix + DbPlayer.TABLE_SCHEMA_SQLITE.getName());
+                }
+            }
+
+            // Create Tables
             if (!database.doesTableExist(DbPlayer.TABLE_SCHEMA_MYSQL)) {
                 if (database.getType() == DatabaseType.SQLite) {
                     database.createTable(DbPlayer.TABLE_SCHEMA_SQLITE);
@@ -68,6 +90,8 @@ public class DatabaseManager {
             e.printStackTrace();
             connected.set(false);
         }
+
+        initialized = true;
     }
 
     // Disconnects from the database
