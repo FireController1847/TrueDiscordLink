@@ -1,11 +1,9 @@
 package com.visualfiredev.truediscordlink.listeners.minecraft;
 
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
-import com.visualfiredev.truediscordlink.VersionHelper;
 import com.visualfiredev.truediscordlink.nms.advancement.IAdvancementHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import java.util.Arrays;

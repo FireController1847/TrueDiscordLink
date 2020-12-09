@@ -5,7 +5,6 @@ import com.visualfiredev.javabase.DatabaseType;
 import com.visualfiredev.truediscordlink.database.DbPlayer;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 

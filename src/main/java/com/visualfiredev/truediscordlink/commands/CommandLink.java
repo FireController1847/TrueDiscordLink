@@ -1,9 +1,7 @@
 package com.visualfiredev.truediscordlink.commands;
 
 import com.visualfiredev.javabase.Database;
-import com.visualfiredev.javabase.DatabaseType;
 import com.visualfiredev.javabase.DatabaseValue;
-import com.visualfiredev.truediscordlink.DatabaseManager;
 import com.visualfiredev.truediscordlink.DiscordManager;
 import com.visualfiredev.truediscordlink.TrueDiscordLink;
 import com.visualfiredev.truediscordlink.database.DbPlayer;
@@ -17,7 +15,6 @@ import org.javacord.api.entity.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CommandLink implements CommandExecutor {
 
