@@ -173,7 +173,7 @@ public class TrueDiscordLink extends JavaPlugin {
     }
 
     public String escapeDiscordFormatting(String content) {
-        return content.replace("*", "\\*").replace("_", "\\_");
+        return content.replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
     }
 
     // Utility method to translate color codes

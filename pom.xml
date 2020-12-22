@@ -4,8 +4,8 @@
 
     <!-- Project Information -->
     <name>TrueDiscordLink</name>
-    <description>Provides a link between Discord and your Minecraft server</description>
-    <groupId>com.visualfiredev</groupId>
+    <description>Provides a link between Discord and your Minecraft server.</description>
+    <groupId>com.firecontroller1847</groupId>
     <artifactId>truediscordlink</artifactId>
     <version>${projectVersion}</version>
     <packaging>jar</packaging>
