@@ -178,7 +178,7 @@
         <dependency>
             <groupId>com.visualfiredev</groupId>
             <artifactId>javabase</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
             <scope>compile</scope>
         </dependency>
 

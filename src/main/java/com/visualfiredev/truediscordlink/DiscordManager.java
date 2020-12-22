@@ -270,7 +270,7 @@ public class DiscordManager {
         // Run Modifications
         this.modifyAddCheckMentions(atomicContent, atomicModifications, player);
 
-        // Send messages
+        // Send Messages
         this.sendDiscordBotMessage(atomicContent.get(), blocking, player);
         this.sendDiscordWebhookMessage(atomicContent.get(), player); // Webhooks are always blocking because of HTTP requests... Is this able to be changed?
 

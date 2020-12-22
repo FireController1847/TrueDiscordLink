@@ -151,7 +151,7 @@ public class TrueDiscordLink extends JavaPlugin {
         // Replace Arguments
         if (arguments != null) {
             for (String[] argument : arguments) {
-                value = value.replace(argument[0], argument[1]);
+                value = value.replace(argument[0], this.escapeDiscordFormatting(argument[1]));
             }
         }
 
@@ -170,6 +170,10 @@ public class TrueDiscordLink extends JavaPlugin {
     }
     public String getTranslation(String key) {
         return this.getTranslation(key, true, null);
+    }
+
+    public String escapeDiscordFormatting(String content) {
+        return content.replace("*", "\\*").replace("_", "\\_");
     }
 
     // Utility method to translate color codes
