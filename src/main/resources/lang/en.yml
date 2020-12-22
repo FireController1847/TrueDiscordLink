@@ -50,6 +50,6 @@ linking:
     missing: "%prefix% I was unable to find a user by that username. Please run the command again, but this time with the first few letters of your Discord username."
     check_discord: "%prefix% Check Discord to complete the linking process. If you did not receive a DM, ensure DMs are enabled on the server, and then run this command again."
   discord:
-    request: "You have received a request to link your Minecraft and Discord accounts. Respond with %discord_prefix%link confirm to confirm, or ignore this message to deny."
+    request: "You have received a request to link your Minecraft and Discord accounts. Respond with `%discord_prefix%link confirm` to confirm, or ignore this message to deny."
     no_request: "You do not currently have a request to link your accounts. Make sure to run the `/tdl link` command in Minecraft first!"
     success: "Congratulations! Your Minecraft and Discord accounts are now linked!"

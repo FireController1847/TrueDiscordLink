@@ -82,6 +82,7 @@ bot:
       - "mywebsite.net"
 
     # The rate at which these statuses will cycle in seconds (minimum 15 seconds)
+    # Changes take effect after restart
     activity_cycle_speed: 300
 
     # The commands to include on the Discord server that users can run.
@@ -100,6 +101,7 @@ bot:
 
     # The rate at which the channel topics should be updated in seconds (minimum 5 minutes) (this is due to a Discord rate limit)
     # Set to -1 to disable updating (aka set once when the bot launches)
+    # Changes take effect after restart
     auto_channel_topic_update_rate: 300
 
     # The message to put for auto-channel-topic.

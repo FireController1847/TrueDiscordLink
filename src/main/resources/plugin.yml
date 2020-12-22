@@ -1,8 +1,8 @@
 # Run Information
 api-version: "1.15"
-main: com.visualfiredev.truediscordlink.TrueDiscordLink
-load: POSTWORLD
+main: com.firecontroller1847.truediscordlink.TrueDiscordLink
 softdepend: [PlaceholderAPI]
+load: POSTWORLD
 
 # Metadata Information
 name: ${project.name}
@@ -18,18 +18,6 @@ commands:
     usage: /truediscordlink
     aliases: [truediscord,discordlink,discord,tdl]
     permission: truediscordlink.command.discord
-  truediscordlink reload:
-    description: Reloads the configuration files
-    usage: /truediscordlink reload
-    permission: truediscordlink.command.reload
-  truediscordlink link:
-    description: Links a Minecraft account and Discord account
-    usage: /truediscordlink link
-    permission: truediscordlink.command.link
-  truediscordlink unlink:
-    description: Unlinks a Minecraft account and Discord account
-    usage: /truediscordlink unlink
-    permission: truediscordlink.command.unlink
 
 # Permissions
 permissions:
