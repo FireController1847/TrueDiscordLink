@@ -91,7 +91,7 @@ bot:
     commands:
       ip: "Join us at `server.mywebsite.net`"
       website: "Visit our website at https://www.mywebsite.net/"
-      list: "Online Players: %listplayers_in_world_world%"
+      list: "Online Players: %playerlist_online,normal,yes,list%"
       online: "There are currently %server_online% out of %server_max_players% players online."
 
     # Whether or not to auto-update the channel topic for specific channels

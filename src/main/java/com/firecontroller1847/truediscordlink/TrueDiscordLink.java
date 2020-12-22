@@ -3,7 +3,7 @@ package com.firecontroller1847.truediscordlink;
 import com.firecontroller1847.truediscordlink.commands.CommandTrueDiscordLink;
 import com.firecontroller1847.truediscordlink.listeners.minecraft.*;
 import com.firecontroller1847.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
 public class TrueDiscordLink extends FirePlugin {
 
     // Dependent Plugins
-    private PlaceholderAPI placeholderApi;
+    private PlaceholderAPIPlugin placeholderApi;
 
     // Managers
     private VersionHelper versionHelper;
@@ -23,7 +23,7 @@ public class TrueDiscordLink extends FirePlugin {
     @Override
     public boolean onAfterConfiguration() {
         // Load dependent plugins
-        placeholderApi = (PlaceholderAPI) this.loadPlugin("PlaceholderAPI");
+        placeholderApi = (PlaceholderAPIPlugin) this.loadPlugin("PlaceholderAPI");
 
         // Ensure that we are configured
         if (!this.getConfig().getBoolean("configured")) {
@@ -72,7 +72,7 @@ public class TrueDiscordLink extends FirePlugin {
     }
 
     // Getters
-    public PlaceholderAPI getPlaceholderApi() {
+    public PlaceholderAPIPlugin getPlaceholderApi() {
         return placeholderApi;
     }
     public VersionHelper getVersionHelper() {
