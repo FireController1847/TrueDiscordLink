@@ -221,36 +221,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- SYSTEM: SpigotMC w/ NMS -->
-        <dependency>
-            <groupId>net.minecraft</groupId>
-            <artifactId>server</artifactId>
-            <version>1_15_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/spigot-1_15_R1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>net.minecraft.</groupId>
-            <artifactId>server</artifactId>
-            <version>1_16_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/spigot-1_16_R1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>net.minecraft..</groupId>
-            <artifactId>server</artifactId>
-            <version>1_16_R2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/spigot-1_16_R2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>net.minecraft...</groupId>
-            <artifactId>server</artifactId>
-            <version>1_16_R3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/spigot-1_16_R3.jar</systemPath>
-        </dependency>
-
     </dependencies>
 
 </project>
