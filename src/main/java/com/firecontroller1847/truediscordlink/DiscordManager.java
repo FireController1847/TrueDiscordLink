@@ -336,7 +336,7 @@ public class DiscordManager {
             skin = discordlink.getConfig().getString("webhooks.skins_url");
             if (skin != null) {
                 skin = skin.replace("%uuid%", player.getUniqueId().toString());
-                skin = skin.replace("%name%",player.getName());
+                skin = skin.replace("%name%", TrueDiscordLink.stripColorCodes(player.getName()));
             }
         }
 
@@ -348,7 +348,7 @@ public class DiscordManager {
                     new String[] { "%name%" , player.getName() },
                     new String[] { "%displayName%", player.getDisplayName() },
                     new String[] { "%uuid%", player.getUniqueId().toString() }
-                ), player.getDisplayName(), skin);
+                ), player.getDisplayName(), skin); // TODO: Why is the username not customizable
             } else {
                 this.makeWebhookRequest(url, content);
             }
@@ -367,7 +367,7 @@ public class DiscordManager {
             JsonObject object = new JsonObject();
             object.addProperty("content", content);
             if (username != null) {
-                object.addProperty("username", username);
+                object.addProperty("username", TrueDiscordLink.stripColorCodes(username));
             }
             if (skin != null) {
                 object.addProperty("avatar_url", skin);

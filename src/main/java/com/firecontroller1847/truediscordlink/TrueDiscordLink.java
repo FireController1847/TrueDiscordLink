@@ -1,5 +1,6 @@
 package com.firecontroller1847.truediscordlink;
 
+import com.earth2me.essentials.Essentials;
 import com.firecontroller1847.truediscordlink.commands.CommandTrueDiscordLink;
 import com.firecontroller1847.truediscordlink.listeners.minecraft.*;
 import com.firecontroller1847.truediscordlink.tabcompleters.TabCompleterTrueDiscordLink;
@@ -13,6 +14,7 @@ public class TrueDiscordLink extends FirePlugin {
 
     // Dependent Plugins
     private PlaceholderAPIPlugin placeholderApi;
+    private Essentials essentialsApi;
 
     // Managers
     private VersionHelper versionHelper;
@@ -24,6 +26,7 @@ public class TrueDiscordLink extends FirePlugin {
     public boolean onAfterConfiguration() {
         // Load dependent plugins
         placeholderApi = (PlaceholderAPIPlugin) this.loadPlugin("PlaceholderAPI");
+        essentialsApi = (Essentials) this.loadPlugin("Essentials");
 
         // Ensure that we are configured
         if (!this.getConfig().getBoolean("configured")) {
@@ -75,6 +78,9 @@ public class TrueDiscordLink extends FirePlugin {
     public PlaceholderAPIPlugin getPlaceholderApi() {
         return placeholderApi;
     }
+    public Essentials getEssentialsApi() {
+        return essentialsApi;
+    }
     public VersionHelper getVersionHelper() {
         return versionHelper;
     }
@@ -84,4 +90,5 @@ public class TrueDiscordLink extends FirePlugin {
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
+
 }

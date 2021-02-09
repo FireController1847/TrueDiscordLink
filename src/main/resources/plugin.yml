@@ -1,7 +1,7 @@
 # Run Information
 api-version: "1.15"
 main: com.firecontroller1847.truediscordlink.TrueDiscordLink
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, Essentials]
 load: POSTWORLD
 
 # Metadata Information
