@@ -389,12 +389,12 @@ public class DiscordManager {
             object.add("allowed_mentions", allowedMentions);
 
             // Convert Object to Data
-            byte[] data = object.toString().getBytes(StandardCharsets.ISO_8859_1);
+            byte[] data = object.toString().getBytes(StandardCharsets.UTF_8);
             int length = data.length;
 
             // Add Data & Make Request
             connection.setFixedLengthStreamingMode(length);
-            connection.setRequestProperty("Content-Type", "application/json; charset=ISO_8859_1");
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF_8");
             connection.connect();
             try (OutputStream stream = connection.getOutputStream()) {
                 stream.write(data);
