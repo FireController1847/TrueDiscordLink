@@ -324,8 +324,8 @@ public class DiscordManager {
                 if (player != null) {
                     CompletableFuture<Message> future = channel.sendMessage(TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_bot_format", false,
                         new String[] { "%message%", content },
-                        new String[] { "%name%" , player.getName() },
-                        new String[] { "%displayName%", player.getDisplayName() },
+                        new String[] { "%name%" , TrueDiscordLink.escapeDiscordFormatting(player.getName()) },
+                        new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
                         new String[] { "%uuid%", player.getUniqueId().toString() }
                     )));
                     if (blocking) {
@@ -362,8 +362,8 @@ public class DiscordManager {
             if (player != null) {
                 this.makeWebhookRequest(url, TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_webhook_format", false,
                     new String[] { "%message%", content },
-                    new String[] { "%name%" , player.getName() },
-                    new String[] { "%displayName%", player.getDisplayName() },
+                    new String[] { "%name%" , TrueDiscordLink.escapeDiscordFormatting(player.getName()) },
+                    new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
                     new String[] { "%uuid%", player.getUniqueId().toString() }
                 )), TrueDiscordLink.stripColorCodes(player.getDisplayName()), skin); // TODO: Why is the username not customizable
             } else {

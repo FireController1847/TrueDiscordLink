@@ -101,7 +101,7 @@ public class TrueDiscordLink extends FirePlugin {
     }
 
     // Escapes formatting for Discord messages
-    public String escapeDiscordFormatting(String content) {
+    public static String escapeDiscordFormatting(String content) {
         return content.replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
     }
 

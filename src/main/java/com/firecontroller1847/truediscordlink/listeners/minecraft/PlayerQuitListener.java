@@ -25,8 +25,8 @@ public class PlayerQuitListener implements Listener {
         // Send Discord Message
         discordlink.getDiscordManager().sendDiscordMessage(
             discordlink.getTranslation("events.player_quit", false,
-                new String[] { "%name%", event.getPlayer().getName() },
-                new String[] { "%displayName%", event.getPlayer().getDisplayName() },
+                new String[] { "%name%", TrueDiscordLink.escapeDiscordFormatting(event.getPlayer().getName()) },
+                new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(event.getPlayer().getDisplayName()) },
                 new String[] { "%uuid%", event.getPlayer().getUniqueId().toString() }
             )
         );

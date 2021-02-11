@@ -120,7 +120,7 @@ public class DiscordChatListener implements MessageCreateListener {
                             // Placeholder API
                             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                                 value = PlaceholderAPI.setPlaceholders(null, value);
-                                value = TrueDiscordLink.stripColorCodes(value);
+                                value = TrueDiscordLink.escapeDiscordFormatting(TrueDiscordLink.stripColorCodes(value));
                             }
 
                             // Send Message
