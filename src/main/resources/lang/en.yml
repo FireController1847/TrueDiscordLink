@@ -24,8 +24,9 @@ config:
   reloaded: "%prefix% Configuration reloaded!"
 messages:
   to_mc_format: "%prefix% <%nickname%> %message%"
-  to_mc_attachment_format: "%prefix% <%nickname%> §9§n%message%"
-  to_mc_attachment_placeholder: "§9§nOpen Attachment"
+  to_mc_attachment_format: "%prefix% <%nickname%> %message%"
+  to_mc_attachment_placeholder: "Open Attachment"
+  to_mc_attachment_color: "§9§n"
   from_mc_webhook_format: "%message%"
   from_mc_bot_format: "**%name%** >> %message%"
 tagging:

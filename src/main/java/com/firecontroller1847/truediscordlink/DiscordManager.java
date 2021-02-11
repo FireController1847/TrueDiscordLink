@@ -24,6 +24,8 @@ import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.connection.LostConnectionEvent;
+import org.javacord.api.listener.connection.LostConnectionListener;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -131,7 +133,13 @@ public class DiscordManager {
 
             // See issue https://github.com/Javacord/Javacord/issues/598 for why we wait
             CountDownLatch shutdownWaiter = new CountDownLatch(1);
-            api.addLostConnectionListener(event -> shutdownWaiter.countDown());
+            // WARNING: Do not use LAMBDA! Otherwise compiler won't include the class for some reason...
+            api.addLostConnectionListener(new LostConnectionListener() {
+                @Override
+                public void onLostConnection(LostConnectionEvent event) {
+                    shutdownWaiter.countDown();
+                }
+            });
             api.disconnect();
             try {
                 shutdownWaiter.await(2, TimeUnit.MINUTES);
@@ -199,6 +207,7 @@ public class DiscordManager {
             }
         }
 
+        // Handle message attachments
         if (message.getAttachments().size() > 0) {
             TextComponent text = buildAttachmentTextComponent(message, content);
             discordlink.getServer().spigot().broadcast(text);
@@ -210,7 +219,10 @@ public class DiscordManager {
                 new String[] { "%discriminator%", message.getAuthor().getDiscriminator().toString() },
                 new String[] { "%id%", message.getAuthor().getIdAsString() }
             );
-            text = text.replace("%message%", content); // Replace content after translation to prevent parsing color codes
+
+            // Replace content after translation to prevent parsing color codes
+            // They are parsed earlier if the configuration option is enabled
+            text = text.replace("%message%", content);
             discordlink.getServer().broadcastMessage(text);
         }
     }
@@ -235,6 +247,9 @@ public class DiscordManager {
         if (content.isEmpty()) {
             content = discordlink.getTranslation("messages.to_mc_attachment_placeholder", true);
         }
+
+        // Prepend color
+        content = discordlink.getTranslation("messages.to_mc_attachment_color", true) + content;
 
         // Make sure only the %message% is clickable by splitting the message into three parts: pre-message, message, post-message
         int messageIndex = attachmentFormat.indexOf("%message%");
@@ -275,6 +290,8 @@ public class DiscordManager {
 
         // Run Modifications
         this.modifyAddCheckMentions(atomicContent, atomicModifications, player);
+
+        // TODO: Add support for custom emoji parsing
 
         // Send Messages
         this.sendDiscordBotMessage(atomicContent.get(), blocking, player);

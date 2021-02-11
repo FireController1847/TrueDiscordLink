@@ -8,6 +8,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class TrueDiscordLink extends FirePlugin {
@@ -34,6 +35,15 @@ public class TrueDiscordLink extends FirePlugin {
             return false;
         }
 
+        // Migrate configurations
+        try {
+            this.migrateConfigurations();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.getLogger().severe("There was an error attempting to migrate the old configurations to the new ones. Please contact the developer(s), " + this.getDescription().getAuthors().get(0) + ".");
+            return false;
+        }
+
         // Initialize Managers
         versionHelper = new VersionHelper(this);
         discordManager = new DiscordManager(this);
@@ -42,6 +52,7 @@ public class TrueDiscordLink extends FirePlugin {
         // Register Commands
         PluginCommand cmdtdl = Objects.requireNonNull(this.getCommand("truediscordlink"));
         cmdtdl.setExecutor(new CommandTrueDiscordLink());
+
         cmdtdl.setTabCompleter(new TabCompleterTrueDiscordLink());
 
         // Register Events
@@ -57,15 +68,35 @@ public class TrueDiscordLink extends FirePlugin {
     }
 
     @Override
-    public void onDisable() {
-        super.onDisable();
-
+    public void onShutdown() {
         if (this.getConfig().getBoolean("configured")) {
             // Disable Discord Manager
             discordManager.shutdown();
 
             // Disable Database Manager
             databaseManager.disconnect();
+        }
+    }
+
+    // TODO: FirePlugin should handle this stuff!
+    private void migrateConfigurations() throws IOException {
+        this.getLogger().info("Checking for version migrations...");
+        boolean migrated = false;
+
+        // v1.0.3 -> v1.0.4
+        if (!translations.contains("messages.to_mc_attachment_color")) {
+            translations.set("messages.to_mc_attachment_color", "§9§n");
+            this.getLogger().info("[en.yml] Added messages.to_mc_attachment_color");
+            migrated = true;
+        }
+
+        // Save
+        if (migrated) {
+            this.saveConfig();
+            this.saveTranslations();
+            this.getLogger().info("Migrations saved!");
+        } else {
+            this.getLogger().info("No migrations found!");
         }
     }
 

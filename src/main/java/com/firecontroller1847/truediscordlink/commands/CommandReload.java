@@ -20,7 +20,7 @@ public class CommandReload extends FireCommand {
 
         // Reconnect database
         discordlink.getDatabaseManager().disconnect();
-        discordlink.getDatabaseManager().connect();
+        new Thread(discordlink.getDatabaseManager()::connect).start();
 
         // Send notification message
         sender.sendMessage(discordlink.getTranslation("config.reloaded"));

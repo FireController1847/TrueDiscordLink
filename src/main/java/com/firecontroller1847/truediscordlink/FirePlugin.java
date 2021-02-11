@@ -41,30 +41,30 @@ import java.util.regex.Pattern;
  * </p>
  *
  * @author FireController#1847
- * @version 1
+ * @version 2
  */
 // TODO: Add support for multiple configurations
 public abstract class FirePlugin extends JavaPlugin {
 
     // The instance of this plugin for singleton usage.
-    private static FirePlugin instance;
+    protected static FirePlugin instance;
 
     // Variables
-    private FileConfiguration translations; // The translations file configuration
+    private Path translationsFile; // The file for the translations file
+    // TODO: Remove protected when we handle configuration migrations
+    protected FileConfiguration translations; // The translations file configuration
     private LinkedHashMap<String, Thread> loops = new LinkedHashMap<>(); // Utility to allow for looping methods
 
     /**
      * <p>
      *     Sets up the configuration and translations and logs enablement.
      *     <br><br>
-     *     If you choose to override this method, ensure you call the super,
-     *     otherwise you will get no benefits from extending this class. It
-     *     is recommended to instead override {@link FirePlugin#onAfterConfiguration()}.
+     *     Cannot be overridden. For similar execution, override {@link FirePlugin#onAfterConfiguration()}.
      * </p>
      * @see FirePlugin#onAfterConfiguration()
      */
     @Override
-    public void onEnable() {
+    public final void onEnable() {
         instance = this;
 
         // Called before configuring
@@ -107,11 +107,9 @@ public abstract class FirePlugin extends JavaPlugin {
 
     /**
      * <p>
-     *     This is the primary method you should use when setting up anything in your plugin.
+     *     This is the primary method you should override when setting up anything in your plugin.
      *     <br><br>
-     *     Called after the configuration has been loaded. This method is
-     *     provided because it is called before the final logging message
-     *     has been sent.
+     *     Called after the configuration has been loaded.
      *     <br><br>
      *     If you return false, it will automatically disable the plugin.
      *     Please note that it will not send an error message.
@@ -137,10 +135,22 @@ public abstract class FirePlugin extends JavaPlugin {
     }
 
     /**
+     * This is the primary method you should override when cleaning up anything in your plugin.
+     * <br><br>
+     * Called before all threads have been shut down.
+     */
+    public void onShutdown() {
+        // This method does nothing, it's here in case the user wants to override it.
+    }
+
+    /**
      * Shuts down all loops and logs disablement
      */
     @Override
-    public void onDisable() {
+    public final void onDisable() {
+        // Called before thread shutdown
+        this.onShutdown();
+
         // Shutdown Loops
         for (Thread thread : loops.values()) {
             thread.interrupt();
@@ -201,7 +211,8 @@ public abstract class FirePlugin extends JavaPlugin {
      */
     protected void loadTranslations() {
         // Destroy it if it exists
-        if (translations != null) {
+        if (translationsFile != null || translations != null) {
+            translationsFile = null;
             translations = null;
         }
 
@@ -211,29 +222,36 @@ public abstract class FirePlugin extends JavaPlugin {
             if (code == null) {
                 code = "en";
             }
-            Path filePath = Paths.get(this.getDataFolder() + "/lang/" + code + ".yml");
+            translationsFile = Paths.get(this.getDataFolder() + "/lang/" + code + ".yml");
 
             // Ensure Directories Exist
-            Files.createDirectories(filePath.getParent());
+            Files.createDirectories(translationsFile.getParent());
 
             // Ensure File Exists
-            if (!Files.exists(filePath)) {
+            if (!Files.exists(translationsFile)) {
                 try {
                     this.saveResource("lang/" + code + ".yml", false);
                 } catch (IllegalArgumentException e) {
                     (new InvalidConfigurationException("Invalid language file! Using default en.yml")).printStackTrace();
-                    filePath = Paths.get(this.getDataFolder() + "/lang/en.yml");
+                    translationsFile = Paths.get(this.getDataFolder() + "/lang/en.yml");
                     this.saveResource("lang/en.yml", false);
                 }
             }
 
             // Load Configuration
             translations = new YamlConfiguration();
-            translations.load(filePath.toFile());
+            translations.load(translationsFile.toFile());
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
             this.disable();
         }
+    }
+
+    /**
+     * Saves the translations configuration file.
+     */
+    protected void saveTranslations() throws IOException {
+        translations.save(translationsFile.toFile());
     }
 
     /**

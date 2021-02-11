@@ -58,11 +58,14 @@ public class DatabaseManager {
         } catch (Exception e) {
             e.printStackTrace();
             connected.set(false);
+            this.discordlink.getLogger().info("There was an error attempting to log in to the database. Reload to try again.");
+            return;
         }
 
         // Initialize
         this.initialize();
 
+        // Log
         this.discordlink.getLogger().info("Logged in to Database!");
     }
 
