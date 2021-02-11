@@ -305,17 +305,17 @@ public class DiscordManager {
             api.getTextChannelById(channelId).ifPresent(channel -> {
                 // If it exists, send a message dependent on whether or not there's a player
                 if (player != null) {
-                    CompletableFuture<Message> future = channel.sendMessage(discordlink.getTranslation("messages.from_mc_bot_format", false,
+                    CompletableFuture<Message> future = channel.sendMessage(TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_bot_format", false,
                         new String[] { "%message%", content },
                         new String[] { "%name%" , player.getName() },
                         new String[] { "%displayName%", player.getDisplayName() },
                         new String[] { "%uuid%", player.getUniqueId().toString() }
-                    ));
+                    )));
                     if (blocking) {
                         future.join();
                     }
                 } else {
-                    CompletableFuture<Message> future = channel.sendMessage(content);
+                    CompletableFuture<Message> future = channel.sendMessage(TrueDiscordLink.stripColorCodes(content));
                     if (blocking) {
                         future.join();
                     }
@@ -343,12 +343,12 @@ public class DiscordManager {
         // Send messages
         for (String url : discordlink.getConfig().getStringList("webhooks.urls")) {
             if (player != null) {
-                this.makeWebhookRequest(url, discordlink.getTranslation("messages.from_mc_webhook_format", false,
+                this.makeWebhookRequest(url, TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_webhook_format", false,
                     new String[] { "%message%", content },
                     new String[] { "%name%" , player.getName() },
                     new String[] { "%displayName%", player.getDisplayName() },
                     new String[] { "%uuid%", player.getUniqueId().toString() }
-                ), player.getDisplayName(), skin); // TODO: Why is the username not customizable
+                )), TrueDiscordLink.stripColorCodes(player.getDisplayName()), skin); // TODO: Why is the username not customizable
             } else {
                 this.makeWebhookRequest(url, content);
             }
@@ -367,7 +367,7 @@ public class DiscordManager {
             JsonObject object = new JsonObject();
             object.addProperty("content", content);
             if (username != null) {
-                object.addProperty("username", TrueDiscordLink.stripColorCodes(username));
+                object.addProperty("username", username);
             }
             if (skin != null) {
                 object.addProperty("avatar_url", skin);
