@@ -1,10 +1,12 @@
 package com.firecontroller1847.truediscordlink;
 
+import com.firecontroller1847.truediscordlink.database.DbPlayer;
+import com.firecontroller1847.truediscordlink.listeners.discord.DiscordChatListener;
+import com.firecontroller1847.truediscordlink.listeners.discord.DiscordEditListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.vdurmont.emoji.EmojiParser;
-import com.firecontroller1847.truediscordlink.listeners.discord.DiscordChatListener;
-import com.firecontroller1847.truediscordlink.listeners.discord.DiscordEditListener;
+import com.visualfiredev.javabase.Database;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -495,6 +497,29 @@ public class DiscordManager {
     }
 
     public static ArrayList<User> getUsersPartiallyMatching(Server server, String partialUsername, boolean firstOnly) {
+        TrueDiscordLink tdl = (TrueDiscordLink) TrueDiscordLink.getInstance();
+
+        // Check Database
+        if (tdl.getConfig().getBoolean("tagging.enable_shortcut_use_database")) {
+            Database database = tdl.getDatabaseManager().getDatabase();
+            if (database != null && database.isConnected()) {
+                try {
+                    ArrayList<DbPlayer> results = database.select(DbPlayer.getTableSchema(database), DbPlayer.class, "name LIKE ?", "%" + partialUsername + "%");
+                    if (results.size() > 0) {
+                        String did = results.get(0).getDiscordId();
+                        User user = tdl.getDiscordManager().getApi().getUserById(did).get();
+                        ArrayList<User> users = new ArrayList<>();
+                        users.add(user);
+                        return users;
+                    }
+                } catch (Exception e) {
+                    // Ignore and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Check Discord
         Collection<User> users = server.getMembers();
         ArrayList<User> matchingUsers = new ArrayList<>();
         for (User user : users) {
@@ -508,7 +533,7 @@ public class DiscordManager {
                 added = true;
 
             // Check for partial match
-            } else if (partialUsername.length() > 3 && (name.toLowerCase().startsWith(partialUsername.toLowerCase()) || nickname.toLowerCase().startsWith(partialUsername.toLowerCase()))) {
+            } else if (partialUsername.length() > 3 && (name.toLowerCase().contains(partialUsername.toLowerCase()) || nickname.toLowerCase().contains(partialUsername.toLowerCase()))) {
                 matchingUsers.add(user);
                 added = true;
 

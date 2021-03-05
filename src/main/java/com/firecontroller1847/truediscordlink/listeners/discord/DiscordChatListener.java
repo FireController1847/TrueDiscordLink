@@ -58,7 +58,7 @@ public class DiscordChatListener implements MessageCreateListener {
                 try {
                     // Search for value in database
                     Database database = discordlink.getDatabaseManager().getDatabase();
-                    ArrayList<DbPlayer> results = database.select(DbPlayer.getTableSchema(database), "discord_id = '" + message.getAuthor().getIdAsString() + "'", DbPlayer.class);
+                    ArrayList<DbPlayer> results = database.select(DbPlayer.getTableSchema(database), DbPlayer.class, "discord_id = ?", message.getAuthor().getIdAsString());
                     if (results.size() == 0) {
                         message.getChannel().sendMessage(discordlink.getTranslation("linking.discord.no_request"));
                         return;

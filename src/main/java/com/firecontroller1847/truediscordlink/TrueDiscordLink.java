@@ -84,9 +84,16 @@ public class TrueDiscordLink extends FirePlugin {
         boolean migrated = false;
 
         // v1.0.3 -> v1.0.4
-        if (!translations.contains("messages.to_mc_attachment_color")) {
+        if (!translations.contains("messages.to_mc_attachment_color", true)) {
             translations.set("messages.to_mc_attachment_color", "§9§n");
             this.getLogger().info("[en.yml] Added messages.to_mc_attachment_color");
+            migrated = true;
+        }
+
+        // v1.0.4 -> v1.1.0
+        if (!getConfig().contains("tagging.enable_shortcut_use_database", true)) {
+            getConfig().set("tagging.enable_shortcut_use_database", true);
+            this.getLogger().info("[config.yml] Added tagging.enable_shortcut_use_database");
             migrated = true;
         }
 

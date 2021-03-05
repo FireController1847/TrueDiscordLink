@@ -39,7 +39,7 @@ public class CommandUnlink extends FireCommand {
 
         try {
             ArrayList<DbPlayer> results;
-            results = database.select(DbPlayer.getTableSchema(database), "minecraft_uuid = '" + player.getUniqueId().toString() + "'", DbPlayer.class);
+            results = database.select(DbPlayer.getTableSchema(database), DbPlayer.class, "minecraft_uuid = ?", player.getUniqueId().toString());
             if (results.size() == 0) {
                 player.sendMessage(plugin.getTranslation("linking.does_not_exist"));
                 return true;

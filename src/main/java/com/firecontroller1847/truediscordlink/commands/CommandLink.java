@@ -44,7 +44,7 @@ public class CommandLink extends FireCommand {
         // Check if user is in database
         try {
             ArrayList<DbPlayer> results;
-            results = database.select(DbPlayer.getTableSchema(database), "minecraft_uuid = '" + player.getUniqueId().toString() + "'", DbPlayer.class);
+            results = database.select(DbPlayer.getTableSchema(database), DbPlayer.class, "minecraft_uuid = ?", player.getUniqueId().toString());
 
             // Store dbPlayer
             DbPlayer dbPlayer;
@@ -57,7 +57,7 @@ public class CommandLink extends FireCommand {
                 database.insert(dbPlayerNew);
 
                 // Re-fetch DbPlayer
-                dbPlayer = database.select(DbPlayer.getTableSchema(database), "minecraft_uuid = '" + player.getUniqueId().toString() + "'", DbPlayer.class).get(0);
+                dbPlayer = database.select(DbPlayer.getTableSchema(database), DbPlayer.class, "minecraft_uuid = ?", player.getUniqueId().toString()).get(0);
 
             // If we are in the database...
             } else {
