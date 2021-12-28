@@ -8,13 +8,9 @@ import com.visualfiredev.javabase.DatabaseValue;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,20 +90,8 @@ public class DiscordChatListener implements MessageCreateListener {
                         });
                     }
 
-                    // Send confirmation message to channel that message was confirmed in.
+                    // Send confirmation message
                     message.getChannel().sendMessage(discordlink.getTranslation("linking.discord.success"));
-
-                    // Check if enabled
-                    if (!discordlink.getConfig().getBoolean("bot.linking.notify_linkage.link.notify")) {
-                        return;
-                    }
-
-                    TextChannel channel = discordlink.getDiscordManager().getApi().getChannelById(discordlink.getConfig().getString("bot.linking.notify_linkage.link.channel")).orElseThrow(() -> new Exception("Link Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Link Notification Channel must be a text channel"));
-                    channel.sendMessage(discordlink.getTranslation("linking.discord.notify_linkage.link",
-                            new String[] { "%username%", player.getName() },
-                            new String[] { "%tag%", discordlink.getConfig().getBoolean("bot.linking.notify_linkage.link.ping") ? "<@" + message.getAuthor().getIdAsString() + ">" : message.getAuthor().getDiscriminatedName() }
-                    ));
-
                 } catch (Exception e) {
                     message.getChannel().sendMessage("There was an internal error while running this command.");
                 }
