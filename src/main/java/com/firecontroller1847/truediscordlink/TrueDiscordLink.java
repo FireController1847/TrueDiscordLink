@@ -109,6 +109,29 @@ public class TrueDiscordLink extends FirePlugin {
             migrated = true;
         }
 
+        // Migration for Channel Notification Upon Linkage.
+        if (!getConfig().contains("bot.linking.notify_linkage", true)) {
+            getConfig().set("bot.linking.notify_linkage.use_separate", false);
+
+            getConfig().set("bot.linking.notify_linkage.link.notify", false);
+            getConfig().set("bot.linking.notify_linkage.link.ping", false);
+            getConfig().set("bot.linking.notify_linkage.link.channel", "000000000000000000");
+
+            getConfig().set("bot.linking.notify_linkage.unlink.notify", false);
+            getConfig().set("bot.linking.notify_linkage.unlink.ping", false);
+            getConfig().set("bot.linking.notify_linkage.unlink.channel", "000000000000000000");
+
+            this.getLogger().info("[config.yml] Added bot.linking.notify_linkage.*");
+            migrated = true;
+        }
+        if (!translations.contains("linking.discord.notify_linkage", true)) {
+            translations.set("linking.discord.notify_linkage.link", "%username% has linked with %tag%!");
+            translations.set("linking.discord.notify_linkage.unlink", "%username% has unlinked with %tag%!");
+
+            this.getLogger().info("[en.yml] Added linking.discord.notify_linkage.*");
+            migrated = true;
+        }
+
         // Save
         if (migrated) {
             this.saveConfig();
