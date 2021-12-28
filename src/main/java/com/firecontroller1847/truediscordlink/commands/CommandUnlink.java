@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.javacord.api.entity.channel.TextChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -76,6 +77,19 @@ public class CommandUnlink extends FireCommand {
 
             // Unlink
             player.sendMessage(plugin.getTranslation("linking.unlink"));
+
+            // Check if enabled
+            if (!plugin.getConfig().getBoolean("bot.linking.notify_linkage.unlink.notify")) {
+                return true;
+            }
+
+            String channelId = plugin.getConfig().getBoolean("bot.linking.notify_linkage.use_separate") ? plugin.getConfig().getString("bot.linking.notify_linkage.unlink.channel") : plugin.getConfig().getString("bot.linking.notify_linkage.link.channel");
+            TextChannel channel = ((TrueDiscordLink) plugin).getDiscordManager().getApi().getChannelById(channelId).orElseThrow(() -> new Exception("Unlink Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Unlink Notification Channel must be a text channel"));
+
+            channel.sendMessage(plugin.getTranslation("linking.discord.notify_linkage.unlink",
+                    new String[] { "%username%", player.getName() },
+                    new String[] { "%tag%", plugin.getConfig().getBoolean("bot.linking.notify_linkage.unlink.ping") ? "<@" + userId + ">" : ((TrueDiscordLink) plugin).getDiscordManager().getApi().getUserById(userId).get().getDiscriminatedName() }
+            ));
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(plugin.getTranslation("linking.failure"));
