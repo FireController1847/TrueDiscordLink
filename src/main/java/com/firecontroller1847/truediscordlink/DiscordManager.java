@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.server.Server;
@@ -49,7 +50,8 @@ import java.util.regex.Pattern;
 public class DiscordManager {
 
     // Constants
-    private static final Pattern DISCORD_MENTION_REGEX = Pattern.compile("@[\\p{Alnum}\\p{Punct}]*");
+    private static final Pattern DISCORD_MENTION_USER_REGEX = Pattern.compile("@[\\p{Alnum}\\p{Punct}]*");
+    private static final Pattern DISCORD_MENTION_CHANNEL_REGEX = Pattern.compile("#[\\p{Alnum}\\p{Punct}]*");
 
     // Variables
     private TrueDiscordLink discordlink;
@@ -292,6 +294,7 @@ public class DiscordManager {
 
         // Run Modifications
         this.modifyAddCheckMentions(atomicContent, atomicModifications, player);
+        this.modifyAddCheckChannelTags(atomicContent, atomicModifications, player);
 
         // TODO: Add support for custom emoji parsing
 
@@ -445,19 +448,19 @@ public class DiscordManager {
         }
 
         // Check for user permission
-        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging")) {
+        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging") && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging.user")) {
             return;
         }
 
         // Check for matches
-        List<String> matches = new ArrayList<>();
-        Matcher matcher = DISCORD_MENTION_REGEX.matcher(content.get());
-        while (matcher.find()) {
-            matches.add(matcher.group());
+        List<String> userMatches = new ArrayList<>();
+        Matcher userMatcher = DISCORD_MENTION_USER_REGEX.matcher(content.get());
+        while (userMatcher.find()) {
+            userMatches.add(userMatcher.group());
         }
 
         // Loop through matches
-        for (String match : matches) {
+        for (String match : userMatches) {
             // Ensure match does not have blank username
             String username = match.substring(1);
             if (username.isEmpty()) {
@@ -489,6 +492,69 @@ public class DiscordManager {
                         );
                         modifications.get().add(
                             new String[] { match, translation }
+                        );
+                    }
+                });
+            }
+        }
+    }
+
+    // Utility method to check for any channel mentions
+    private void modifyAddCheckChannelTags(AtomicReference<String> content, AtomicReference<ArrayList<String[]>> modifications, Player player) {
+        // Check if connected
+        if (!isBotConnected()) {
+            return;
+        }
+
+        // Check if Enabled
+        if (!discordlink.getConfig().getBoolean("tagging.enable_channel_tagging")) {
+            return;
+        }
+
+        // Check for user permission
+        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging.channel")) {
+            return;
+        }
+
+        // Check for channel matches
+        List<String> channelMatches = new ArrayList<>();
+        Matcher channelMatcher = DISCORD_MENTION_CHANNEL_REGEX.matcher(content.get());
+        while (channelMatcher.find()) {
+            channelMatches.add(channelMatcher.group());
+        }
+
+        // Loop through matches
+        for (String match : channelMatches) {
+            // Ensure match does not have blank channel
+            String channel = match.substring(1);
+            if (channel.isEmpty()) {
+                continue;
+            }
+
+            // Ensure we have Discord servers
+            List<Long> serverIds = discordlink.getConfig().getLongList("tagging.mention_servers");
+            if (serverIds.size() == 0) {
+                (new InvalidConfigurationException("The bot is enabled and mention parsing is enabled but there are no mention_servers!")).printStackTrace();
+                return;
+            }
+
+            // Loop through Discord servers
+            for (Long serverId : serverIds) {
+
+                // Attempt to find server
+                api.getServerById(serverId).ifPresent(server -> {
+
+                    // Get matching channel.
+                    List<ServerChannel> matchingChannels = server.getChannelsByName(channel);
+                    if (matchingChannels.size() > 0) {
+                        ServerChannel matchingChannel = matchingChannels.get(0);
+
+                        content.set(content.get().replace(match, "<#" + matchingChannel.getId() + ">"));
+                        String translation = discordlink.getTranslation("tagging.minecraft_channel_tag_color", true,
+                                new String[] { "%name%", matchingChannel.getName() }
+                        );
+                        modifications.get().add(
+                                new String[] { match, translation }
                         );
                     }
                 });
