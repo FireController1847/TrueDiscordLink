@@ -448,7 +448,7 @@ public class DiscordManager {
         }
 
         // Check for user permission
-        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging")) {
+        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging") && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging.user")) {
             return;
         }
 
@@ -512,7 +512,7 @@ public class DiscordManager {
         }
 
         // Check for user permission
-        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging")) {
+        if (player != null && !TrueDiscordLink.hasPermission(player, "truediscordlink.tagging.channel")) {
             return;
         }
 
