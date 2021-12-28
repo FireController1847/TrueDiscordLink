@@ -143,7 +143,7 @@ tagging:
   # Whether or not to allow Minecraft users to tag Discord users
   enable_user_tagging: true
 
-  # Enables detection of attempted tags to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
+  # Enables detection of attempted user mentions to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
   # Minimum of four characters.
   # If enable_user_tagging is enabled, you probably want this enabled to.
   # This only works if bot.enabled is set to true.
@@ -152,6 +152,9 @@ tagging:
   # If the shortcut is enabled, whether or not to also attempt to find mentions by looking through the linked accounts database.
   # For example, if a Minecraft username "ABCD" has linked their account, but their Discord username is "EEEE," typing "@ABCD" will tag "@EEEE."
   enable_shortcut_use_database: true
+
+  # Whether or not to allow Minecraft users to tag Discord channels
+  enable_channel_tagging: true
 
   # Whether or not to allow Minecraft users to tag Discord roles
   enable_role_tagging: false

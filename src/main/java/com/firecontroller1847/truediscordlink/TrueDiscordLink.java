@@ -97,6 +97,18 @@ public class TrueDiscordLink extends FirePlugin {
             migrated = true;
         }
 
+        // Migration for Channel Tags
+        if (!getConfig().contains("tagging.enable_channel_tagging", true)) {
+            getConfig().set("tagging.enable_channel_tagging", true);
+            this.getLogger().info("[config.yml] Added tagging.enable_channel_tagging");
+            migrated = true;
+        }
+        if (!translations.contains("tagging.minecraft_channel_tag_color", true)) {
+            translations.set("tagging.minecraft_channel_tag_color", "§a#%name%§r");
+            this.getLogger().info("[en.yml] Added tagging.minecraft_channel_tag_color");
+            migrated = true;
+        }
+
         // Save
         if (migrated) {
             this.saveConfig();

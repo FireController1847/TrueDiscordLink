@@ -31,6 +31,7 @@ messages:
   from_mc_bot_format: "**%name%** >> %message%"
 tagging:
   minecraft_mention_color: "§a@%name%§r"
+  minecraft_channel_tag_color: "§a#%name%§r"
   discord_mention_color: "§a@%name%§r"
 events:
   server_start: "**The server has started! :green_circle:**"
