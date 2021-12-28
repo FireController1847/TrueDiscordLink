@@ -122,6 +122,39 @@ bot:
     roles:
       - "000000000000000000:000000000000000000"
 
+    # A list of options that allow you to notify in a Discord Channel if an account has been unlinked/unlinked
+    notify_linkage:
+
+      # Use separate channels for link/unlink notify
+      # Uses link.channel for both, if false
+      use_separate: false
+
+      # List of options related to linking notify
+      link:
+
+        # Whether the notification is enabled or not
+        notify: false
+
+        # Whether to ping the user in message or not
+        ping: false
+
+        # The id of the channel that will be used to notify of account linking
+        # If use_separate is false & unlink is true, this will be used for unlink as well
+        channel: "000000000000000000"
+
+      # List of options related to unlining notify
+      unlink:
+
+        # Whether the notification is enabled or not
+        notify: false
+
+        # Whether to ping the user in message or not
+        ping: false
+
+        # The id of the channel that will be used to notify of account unlinking
+        # Won't be used if use_separate is false.
+        channel: "000000000000000000"
+
 
 ###########################
 #     System Messages     #

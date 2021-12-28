@@ -55,3 +55,6 @@ linking:
     request: "You have received a request to link your Minecraft and Discord accounts. Respond with `%discord_prefix%link confirm` to confirm, or ignore this message to deny."
     no_request: "You do not currently have a request to link your accounts. Make sure to run the `/tdl link` command in Minecraft first!"
     success: "Congratulations! Your Minecraft and Discord accounts are now linked!"
+    notify_linkage:
+      link: "%username% has linked with %tag%!"
+      unlink: "%username% has unlinked with %tag%!"
