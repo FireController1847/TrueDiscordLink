@@ -91,21 +91,40 @@ public class TrueDiscordLink extends FirePlugin {
         }
 
         // v1.0.4 -> v1.1.0
-        if (!getConfig().contains("tagging.enable_shortcut_use_database", true)) {
-            getConfig().set("tagging.enable_shortcut_use_database", true);
+        if (!this.getConfig().contains("tagging.enable_shortcut_use_database", true)) {
+            this.getConfig().set("tagging.enable_shortcut_use_database", true);
             this.getLogger().info("[config.yml] Added tagging.enable_shortcut_use_database");
             migrated = true;
         }
 
         // Migration for Channel Tags
-        if (!getConfig().contains("tagging.enable_channel_tagging", true)) {
-            getConfig().set("tagging.enable_channel_tagging", true);
+        if (!this.getConfig().contains("tagging.enable_channel_tagging", true)) {
+            this.getConfig().set("tagging.enable_channel_tagging", true);
             this.getLogger().info("[config.yml] Added tagging.enable_channel_tagging");
             migrated = true;
         }
         if (!translations.contains("tagging.minecraft_channel_tag_color", true)) {
             translations.set("tagging.minecraft_channel_tag_color", "§a#%name%§r");
             this.getLogger().info("[en.yml] Added tagging.minecraft_channel_tag_color");
+            migrated = true;
+        }
+
+        // Migration for Channel Notification Upon Linkage.
+        if (!this.getConfig().contains("bot.linking.notify", true)) {
+            this.getConfig().set("bot.linking.notify.link.enabled", false);
+            this.getConfig().set("bot.linking.notify.link.channel", "000000000000000000");
+
+            this.getConfig().set("bot.linking.notify.unlink.enabled", false);
+            this.getConfig().set("bot.linking.notify.unlink.channel", "000000000000000000");
+
+            this.getLogger().info("[config.yml] Added bot.linking.notify.*");
+            migrated = true;
+        }
+        if (!translations.contains("linking.discord.notify", true)) {
+            translations.set("linking.discord.notify.link", "%username% has linked with %mention%!");
+            translations.set("linking.discord.notify.unlink", "%username% has unlinked with %mention%!");
+
+            this.getLogger().info("[en.yml] Added linking.discord.notify.*");
             migrated = true;
         }
 
