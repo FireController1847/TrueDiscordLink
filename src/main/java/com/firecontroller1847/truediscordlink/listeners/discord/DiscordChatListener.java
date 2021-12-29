@@ -94,17 +94,15 @@ public class DiscordChatListener implements MessageCreateListener {
                     // Send confirmation message to channel that message was confirmed in.
                     message.getChannel().sendMessage(discordlink.getTranslation("linking.discord.success"));
 
-                    // Check if enabled
-                    if (!discordlink.getConfig().getBoolean("bot.linking.notify_linkage.link.notify")) {
-                        return;
+                    // Notify channel on successful account linking.
+                    if (discordlink.getConfig().getBoolean("bot.linking.notify.link.enabled")) {
+                        TextChannel channel = discordlink.getDiscordManager().getApi().getChannelById(discordlink.getConfig().getString("bot.linking.notify.link.channel")).orElseThrow(() -> new Exception("Link Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Link Notification Channel must be a text channel"));
+                        channel.sendMessage(discordlink.getTranslation("linking.discord.notify.link",
+                                new String[] { "%username%", player.getName() },
+                                new String[] { "%tag%", message.getAuthor().getDiscriminatedName() },
+                                new String[] { "%mention%", "<@" + message.getAuthor().getIdAsString() + ">"}
+                        ));
                     }
-
-                    TextChannel channel = discordlink.getDiscordManager().getApi().getChannelById(discordlink.getConfig().getString("bot.linking.notify_linkage.link.channel")).orElseThrow(() -> new Exception("Link Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Link Notification Channel must be a text channel"));
-                    channel.sendMessage(discordlink.getTranslation("linking.discord.notify_linkage.link",
-                            new String[] { "%username%", player.getName() },
-                            new String[] { "%tag%", discordlink.getConfig().getBoolean("bot.linking.notify_linkage.link.ping") ? "<@" + message.getAuthor().getIdAsString() + ">" : message.getAuthor().getDiscriminatedName() }
-                    ));
-
                 } catch (Exception e) {
                     message.getChannel().sendMessage("There was an internal error while running this command.");
                 }
