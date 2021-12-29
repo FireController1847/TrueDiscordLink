@@ -125,24 +125,22 @@ bot:
     # A list of options that allow you to notify in a Discord Channel if an account has been unlinked/unlinked
     notify:
 
-      # List of options related to linking notify
+      # A list of options related to notifications when an account has been linked
       link:
 
         # Whether the notification is enabled or not
         enabled: false
 
         # The id of the channel that will be used to notify of account linking
-        # If use_separate is false & unlink is true, this will be used for unlink as well
         channel: "000000000000000000"
 
-      # List of options related to unlinking notify
+      # A list of options related to notifications when an account has been unlinked
       unlink:
 
         # Whether the notification is enabled or not
         enabled: false
 
         # The id of the channel that will be used to notify of account unlinking
-        # Won't be used if use_separate is false.
         channel: "000000000000000000"
 
 
