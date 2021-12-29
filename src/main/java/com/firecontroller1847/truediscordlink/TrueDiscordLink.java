@@ -91,15 +91,15 @@ public class TrueDiscordLink extends FirePlugin {
         }
 
         // v1.0.4 -> v1.1.0
-        if (!getConfig().contains("tagging.enable_shortcut_use_database", true)) {
-            getConfig().set("tagging.enable_shortcut_use_database", true);
+        if (!this.getConfig().contains("tagging.enable_shortcut_use_database", true)) {
+            this.getConfig().set("tagging.enable_shortcut_use_database", true);
             this.getLogger().info("[config.yml] Added tagging.enable_shortcut_use_database");
             migrated = true;
         }
 
         // Migration for Channel Tags
-        if (!getConfig().contains("tagging.enable_channel_tagging", true)) {
-            getConfig().set("tagging.enable_channel_tagging", true);
+        if (!this.getConfig().contains("tagging.enable_channel_tagging", true)) {
+            this.getConfig().set("tagging.enable_channel_tagging", true);
             this.getLogger().info("[config.yml] Added tagging.enable_channel_tagging");
             migrated = true;
         }
@@ -110,25 +110,21 @@ public class TrueDiscordLink extends FirePlugin {
         }
 
         // Migration for Channel Notification Upon Linkage.
-        if (!getConfig().contains("bot.linking.notify_linkage", true)) {
-            getConfig().set("bot.linking.notify_linkage.use_separate", false);
+        if (!this.getConfig().contains("bot.linking.notify", true)) {
+            this.getConfig().set("bot.linking.notify.link.enabled", false);
+            this.getConfig().set("bot.linking.notify.link.channel", "000000000000000000");
 
-            getConfig().set("bot.linking.notify_linkage.link.notify", false);
-            getConfig().set("bot.linking.notify_linkage.link.ping", false);
-            getConfig().set("bot.linking.notify_linkage.link.channel", "000000000000000000");
+            this.getConfig().set("bot.linking.notify.unlink.enabled", false);
+            this.getConfig().set("bot.linking.notify.unlink.channel", "000000000000000000");
 
-            getConfig().set("bot.linking.notify_linkage.unlink.notify", false);
-            getConfig().set("bot.linking.notify_linkage.unlink.ping", false);
-            getConfig().set("bot.linking.notify_linkage.unlink.channel", "000000000000000000");
-
-            this.getLogger().info("[config.yml] Added bot.linking.notify_linkage.*");
+            this.getLogger().info("[config.yml] Added bot.linking.notify.*");
             migrated = true;
         }
-        if (!translations.contains("linking.discord.notify_linkage", true)) {
-            translations.set("linking.discord.notify_linkage.link", "%username% has linked with %tag%!");
-            translations.set("linking.discord.notify_linkage.unlink", "%username% has unlinked with %tag%!");
+        if (!translations.contains("linking.discord.notify", true)) {
+            translations.set("linking.discord.notify.link", "%username% has linked with %mention%!");
+            translations.set("linking.discord.notify.unlink", "%username% has unlinked with %mention%!");
 
-            this.getLogger().info("[en.yml] Added linking.discord.notify_linkage.*");
+            this.getLogger().info("[en.yml] Added linking.discord.notify.*");
             migrated = true;
         }
 
