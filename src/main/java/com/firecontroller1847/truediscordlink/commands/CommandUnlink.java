@@ -1,5 +1,6 @@
 package com.firecontroller1847.truediscordlink.commands;
 
+import com.firecontroller1847.truediscordlink.DatabaseManager;
 import com.firecontroller1847.truediscordlink.FireCommand;
 import com.firecontroller1847.truediscordlink.FirePlugin;
 import com.firecontroller1847.truediscordlink.TrueDiscordLink;
@@ -36,7 +37,11 @@ public class CommandUnlink extends FireCommand {
 
         // Fetch database & player
         Player player = (Player) sender;
-        Database database = ((TrueDiscordLink) plugin).getDatabaseManager().getDatabase();;
+        DatabaseManager databaseManager = ((TrueDiscordLink) plugin).getDatabaseManager();
+        Database database = databaseManager.getDatabase();
+
+        // Validate database connection
+        databaseManager.validateConnection();
 
         try {
             ArrayList<DbPlayer> results;
