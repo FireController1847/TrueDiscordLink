@@ -1,17 +1,17 @@
 package com.firecontroller1847.truediscordlink.nms.advancement;
 
 import org.bukkit.advancement.Advancement;
-import org.bukkit.craftbukkit.v1_18_R2.advancement.CraftAdvancement;
+import org.bukkit.craftbukkit.v1_16_R2.advancement.CraftAdvancement;
 
 import java.util.Objects;
 
-public class AdvancementHelper$1_18_R2 implements IAdvancementHelper {
+public class AdvancementHelper$1_16_R2 implements IAdvancementHelper {
 
     @Override
     public String getName(Advancement bukkitAdvancement) {
         try {
             CraftAdvancement advancement = (CraftAdvancement) bukkitAdvancement;
-            return Objects.requireNonNull(advancement.getHandle().getDisplay()).getTitle().getString();
+            return Objects.requireNonNull(advancement.getHandle().c()).a().getString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -22,7 +22,7 @@ public class AdvancementHelper$1_18_R2 implements IAdvancementHelper {
     public String getDescription(Advancement bukkitAdvancement) {
         try {
             CraftAdvancement advancement = (CraftAdvancement) bukkitAdvancement;
-            return Objects.requireNonNull(advancement.getHandle().getDisplay()).getDescription().getString();
+            return Objects.requireNonNull(advancement.getHandle().c()).b().getString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

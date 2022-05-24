@@ -223,3 +223,46 @@ database:
   # The prefix to prepend to all created tables
   table_prefix: "tdl_"
 ```
+
+## Build Requirements
+
+Since TrueDiscordLink uses NMS, you need to have all versions of NMS available.
+
+The easiest way to do this is to use the following GitHub repository, follow its instructions, then copy the final jar to the project, naming it "all-spigot-nms.jar".
+
+https://github.com/Jacxk/all-spigot-nms
+
+If, for whatever reason, this doesn't work, you can comment that out and include all of the following versions via BuildTools:
+
+```
+(Java 8)
+1.8
+1.8.3
+1.8.8
+1.9.2
+1.9.4
+1.10.2
+1.11.2
+1.12.2
+1.13
+1.13.2
+1.14.4
+1.15.2
+1.16.1
+1.16.3
+1.16.5
+
+(Java 16)
+1.17.1
+
+(Java 17)
+1.18.1
+1.18.2
+```
+
+Run BuildTools with the following command for each version:
+```
+java -jar BuildTools.jar --rev <version> --remapped
+```
+
+Depending on your default Java version, you may need to provide the file location to a "java.exe" file instead of just running "java" for some (or most) of the commands.
