@@ -122,6 +122,27 @@ bot:
     roles:
       - "000000000000000000:000000000000000000"
 
+    # A list of options that allow you to notify in a Discord Channel if an account has been unlinked/unlinked
+    notify:
+
+      # A list of options related to notifications when an account has been linked
+      link:
+
+        # Whether the notification is enabled or not
+        enabled: false
+
+        # The id of the channel that will be used to notify of account linking
+        channel: "000000000000000000"
+
+      # A list of options related to notifications when an account has been unlinked
+      unlink:
+
+        # Whether the notification is enabled or not
+        enabled: false
+
+        # The id of the channel that will be used to notify of account unlinking
+        channel: "000000000000000000"
+
 
 ###########################
 #     System Messages     #
@@ -143,7 +164,7 @@ tagging:
   # Whether or not to allow Minecraft users to tag Discord users
   enable_user_tagging: true
 
-  # Enables detection of attempted tags to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
+  # Enables detection of attempted user mentions to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
   # Minimum of four characters.
   # If enable_user_tagging is enabled, you probably want this enabled to.
   # This only works if bot.enabled is set to true.
@@ -152,6 +173,9 @@ tagging:
   # If the shortcut is enabled, whether or not to also attempt to find mentions by looking through the linked accounts database.
   # For example, if a Minecraft username "ABCD" has linked their account, but their Discord username is "EEEE," typing "@ABCD" will tag "@EEEE."
   enable_shortcut_use_database: true
+
+  # Whether or not to allow Minecraft users to tag Discord channels
+  enable_channel_tagging: true
 
   # Whether or not to allow Minecraft users to tag Discord roles
   enable_role_tagging: false

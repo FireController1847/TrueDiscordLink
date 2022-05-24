@@ -8,6 +8,7 @@ import com.visualfiredev.javabase.DatabaseValue;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -90,8 +91,18 @@ public class DiscordChatListener implements MessageCreateListener {
                         });
                     }
 
-                    // Send confirmation message
+                    // Send confirmation message to channel that message was confirmed in.
                     message.getChannel().sendMessage(discordlink.getTranslation("linking.discord.success"));
+
+                    // Notify channel on successful account linking.
+                    if (discordlink.getConfig().getBoolean("bot.linking.notify.link.enabled")) {
+                        TextChannel channel = discordlink.getDiscordManager().getApi().getChannelById(discordlink.getConfig().getString("bot.linking.notify.link.channel")).orElseThrow(() -> new Exception("Link Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Link Notification Channel must be a text channel"));
+                        channel.sendMessage(discordlink.getTranslation("linking.discord.notify.link",
+                                new String[] { "%username%", player.getName() },
+                                new String[] { "%tag%", message.getAuthor().getDiscriminatedName() },
+                                new String[] { "%mention%", "<@" + message.getAuthor().getIdAsString() + ">"}
+                        ));
+                    }
                 } catch (Exception e) {
                     message.getChannel().sendMessage("There was an internal error while running this command.");
                 }

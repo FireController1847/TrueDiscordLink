@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.javacord.api.entity.channel.TextChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -76,6 +77,16 @@ public class CommandUnlink extends FireCommand {
 
             // Unlink
             player.sendMessage(plugin.getTranslation("linking.unlink"));
+
+            // Notify channel on successful account unlinking.
+            if (plugin.getConfig().getBoolean("bot.linking.notify.unlink.enabled")) {
+                TextChannel channel = ((TrueDiscordLink) plugin).getDiscordManager().getApi().getChannelById(plugin.getConfig().getString("bot.linking.notify.unlink.channel")).orElseThrow(() -> new Exception("Unlink Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Unlink Notification Channel must be a text channel"));
+                channel.sendMessage(plugin.getTranslation("linking.discord.notify.unlink",
+                        new String[] { "%username%", player.getName() },
+                        new String[] { "%tag%", ((TrueDiscordLink) plugin).getDiscordManager().getApi().getUserById(userId).get().getDiscriminatedName() },
+                        new String[] { "%mention%", "<@" + userId + ">"}
+                ));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(plugin.getTranslation("linking.failure"));

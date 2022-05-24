@@ -27,7 +27,7 @@ permissions:
     default: op
     children:
       truediscordlink.command.*: true
-      truediscordlink.tagging: true
+      truediscordlink.tagging.*: true
   truediscordlink.command.*:
     description: Gives permission to all TrueDiscordLink commands
     default: op
@@ -36,6 +36,12 @@ permissions:
       truediscordlink.command.reload: true
       truediscordlink.command.link: true
       truediscordlink.command.unlink: true
+  truediscordlink.tagging.*:
+    description: Gives permission to all TrueDiscordLink tagging features
+    default: op
+    children:
+      truediscordlink.tagging.user: true
+      truediscordlink.tagging.channel: true
 
   # Commands
   truediscordlink.command.discord:
@@ -52,6 +58,9 @@ permissions:
     default: true
 
   # Features
-  truediscordlink.tagging:
+  truediscordlink.tagging.user:
     description: Gives permission to tag users in Discord
+    default: true
+  truediscordlink.tagging.channel:
+    description: Gives permission to tag channels in Discord
     default: true
