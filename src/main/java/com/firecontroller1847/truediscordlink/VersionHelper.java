@@ -21,7 +21,7 @@ public class VersionHelper {
         // Create & Load In Classes
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         discordlink.getLogger().info("Server running version " + version);
-        advancementHelper = new AdvancementHelperReflection();
+        advancementHelper = new AdvancementHelper$1_18_R2();
 //        if (version.equals("v1_15_R1")) {
 //            advancementHelper = new AdvancementHelper_1_15_R1();
 //        } else if (version.equals("v1_16_R1")) {

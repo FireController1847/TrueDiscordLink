@@ -7,42 +7,37 @@
     <description>Provides a link between Discord and your Minecraft server.</description>
     <groupId>com.firecontroller1847</groupId>
     <artifactId>truediscordlink</artifactId>
-    <version>${projectVersion}</version>
-    <packaging>jar</packaging>
+    <version>1.1.0</version>
+    <organization>
+        <name>FireController#1847</name>
+        <url>https://www.firecontroller.dev/</url>
+    </organization>
 
-    <!-- Project Properties -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <actualVersion>1.1.0</actualVersion>
-        <fileVersion>INVALID</fileVersion>
-        <projectVersion>INVALID</projectVersion>
-    </properties>
-
-    <!-- Project Profiles -->
+    <!-- Profiles -->
     <profiles>
-        <!-- Snapshots -->
-        <profile>
-            <id>snapshot</id>
-            <properties>
-                <projectVersion>${actualVersion}-SNAPSHOT</projectVersion>
-                <!--suppress UnresolvedMavenProperty -->
-                <fileVersion>${projectVersion}-${git.commit.id.abbrev}</fileVersion>
-            </properties>
-        </profile>
-
-        <!-- Releases -->
         <profile>
             <id>release</id>
             <properties>
-                <projectVersion>${actualVersion}</projectVersion>
-                <fileVersion>${projectVersion}</fileVersion>
+                <build.version>${project.version}</build.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>snapshot</id>
+            <properties>
+                <!--suppress UnresolvedMavenProperty -->
+                <build.version>${project.version}-${git.branch}+${git.commit.id.abbrev}</build.version>
             </properties>
         </profile>
     </profiles>
 
-    <!-- Project Repositories -->
+    <!-- Properties -->
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- Repositories -->
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -64,24 +59,31 @@
 
     <!-- Build -->
     <build>
-        <finalName>TrueDiscordLink-${fileVersion}-UNSHADED</finalName>
+        <finalName>${project.name}-${build.version}-UNSHADED</finalName>
 
         <!-- Plugins -->
         <plugins>
 
             <!-- Git Commit ID Plugin -->
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.0.0</version>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <id>fetch-git-information</id>
                         <goals>
                             <goal>revision</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+                        <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+                        <includeOnlyProperty>^git.total.commit.count$</includeOnlyProperty>
+                    </includeOnlyProperties>
+                </configuration>
             </plugin>
 
             <!-- Maven Shade Plugin -->
@@ -98,7 +100,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputFile>./target/TrueDiscordLink-${fileVersion}.jar</outputFile>
+                    <outputFile>./target/${project.name}-${build.version}-SHADED.jar</outputFile>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
@@ -110,6 +112,44 @@
                         </filter>
                     </filters>
                 </configuration>
+            </plugin>
+
+            <!-- SpecialSource Maven Plugin -->
+            <plugin>
+                <groupId>net.md-5</groupId>
+                <artifactId>specialsource-maven-plugin</artifactId>
+                <version>1.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
+                        <id>remap-obf</id>
+                        <configuration>
+                            <inputFile>./target/${project.name}-${build.version}-SHADED.jar</inputFile>
+                            <finalName>${project.name}-${build.version}-SHADED-REMAPPED-OBF</finalName>
+                            <srgIn>org.spigotmc:minecraft-server:1.18.2-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
+                            <reverse>true</reverse>
+                            <remappedDependencies>org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
+                            <remappedArtifactAttached>true</remappedArtifactAttached>
+                            <remappedClassifierName>remapped-obf</remappedClassifierName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
+                        <id>remap-spigot</id>
+                        <configuration>
+                            <inputFile>./target/${project.name}-${build.version}-SHADED-REMAPPED-OBF.jar</inputFile>
+                            <finalName>${project.name}-${build.version}</finalName>
+                            <srgIn>org.spigotmc:minecraft-server:1.18.2-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
+                            <remappedDependencies>org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Maven Resources Plugin -->
@@ -150,7 +190,7 @@
                                     <directory>${project.build.directory}</directory>
                                     <filtering>false</filtering>
                                     <includes>
-                                        <include>TrueDiscordLink-${fileVersion}.jar</include>
+                                        <include>${project.name}-${build.version}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -169,7 +209,7 @@
         <dependency>
             <groupId>org.javacord</groupId>
             <artifactId>javacord</artifactId>
-            <version>3.1.2</version>
+            <version>3.3.2</version>
             <scope>compile</scope>
             <type>pom</type>
         </dependency>
@@ -194,14 +234,14 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <version>8.0.25</version>
         </dependency>
 
         <!-- COMPILE: MariaDB Database Driver -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>2.7.0</version>
+            <version>2.7.3</version>
             <scope>compile</scope>
         </dependency>
 
@@ -209,7 +249,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -218,6 +258,15 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.15-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- BUILD: Remapped -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <classifier>remapped-mojang</classifier>
             <scope>provided</scope>
         </dependency>
 
