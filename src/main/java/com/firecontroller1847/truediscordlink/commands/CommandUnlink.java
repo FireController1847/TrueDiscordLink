@@ -31,7 +31,7 @@ public class CommandUnlink extends FireCommand {
 
         // Check against console
         if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage("You cannot use this command from console!");
+            sender.sendMessage(plugin.getTranslation("no_console_usage"));
             return true;
         }
 

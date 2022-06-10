@@ -52,7 +52,6 @@ public class TrueDiscordLink extends FirePlugin {
         // Register Commands
         PluginCommand cmdtdl = Objects.requireNonNull(this.getCommand("truediscordlink"));
         cmdtdl.setExecutor(new CommandTrueDiscordLink());
-
         cmdtdl.setTabCompleter(new TabCompleterTrueDiscordLink());
 
         // Register Events
@@ -97,7 +96,7 @@ public class TrueDiscordLink extends FirePlugin {
             migrated = true;
         }
 
-        // Migration for Channel Tags
+        // v1.1.0 -> v1.2.0
         if (!this.getConfig().contains("tagging.enable_channel_tagging", true)) {
             this.getConfig().set("tagging.enable_channel_tagging", true);
             this.getLogger().info("[config.yml] Added tagging.enable_channel_tagging");
@@ -108,23 +107,40 @@ public class TrueDiscordLink extends FirePlugin {
             this.getLogger().info("[en.yml] Added tagging.minecraft_channel_tag_color");
             migrated = true;
         }
-
-        // Migration for Channel Notification Upon Linkage.
         if (!this.getConfig().contains("bot.linking.notify", true)) {
             this.getConfig().set("bot.linking.notify.link.enabled", false);
             this.getConfig().set("bot.linking.notify.link.channel", "000000000000000000");
-
             this.getConfig().set("bot.linking.notify.unlink.enabled", false);
             this.getConfig().set("bot.linking.notify.unlink.channel", "000000000000000000");
-
             this.getLogger().info("[config.yml] Added bot.linking.notify.*");
             migrated = true;
         }
         if (!translations.contains("linking.discord.notify", true)) {
             translations.set("linking.discord.notify.link", "%username% has linked with %mention%!");
             translations.set("linking.discord.notify.unlink", "%username% has unlinked with %mention%!");
-
             this.getLogger().info("[en.yml] Added linking.discord.notify.*");
+            migrated = true;
+        }
+
+        // v1.2.0 -> v1.3.0
+        if (!translations.contains("no_console_usage", true)) {
+            translations.set("no_console_usage", "%prefix% §cYou cannot use this command from console!");
+            this.getLogger().info("[en.yml] Added no_console_usage");
+            migrated = true;
+        }
+        if (!translations.contains("commands.relay.no_message", true)) {
+            translations.set("commands.relay.no_message", "%prefix% §cYou must include a message for me to relay.");
+            this.getLogger().info("[en.yml] Added commands.relay.no_message");
+            migrated = true;
+        }
+        if (!translations.contains("commands.relay.no_discord_communication", true)) {
+            translations.set("commands.relay.no_discord_communication", "%prefix% §cThere is no way for me to communicate with Discord! Ensure you have either webhooks enabled or a bot enabled with 'from_mc_channels' configured!");
+            this.getLogger().info("[en.yml] Added commands.relay.no_discord_communication");
+            migrated = true;
+        }
+        if (!translations.contains("commands.relay.success", true)) {
+            translations.set("commands.relay.success", "%prefix% Message successfully relayed to the Discord server.");
+            this.getLogger().info("[en.yml] Added commands.relay.success");
             migrated = true;
         }
 

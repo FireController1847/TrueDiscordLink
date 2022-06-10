@@ -16,7 +16,9 @@ public class TabCompleterTrueDiscordLink implements TabCompleter {
     public static final String[][] FIRST_ARGS = {
         { "reload", "truediscordlink.command.reload" },
         { "link", "truediscordlink.command.link" },
-        { "unlink", "truediscordlink.command.unlink" }
+        { "unlink", "truediscordlink.command.unlink" },
+        { "relay", "truediscordlink.command.relay" },
+        { "relaysilent", "truediscordlink.command.relaysilent" }
     };
 
     // Define Secondary Arguments

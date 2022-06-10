@@ -20,6 +20,12 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        // Check if you can communicate with Discord
+        if (!discordlink.getDiscordManager().canCommunicateWithDiscord()) {
+            return;
+        }
+
+        // Check for essentials muting
         if (discordlink.getEssentialsApi() != null) {
             User user = discordlink.getEssentialsApi().getUser(event.getPlayer().getUniqueId());
             if (user != null && user.isMuted()) {

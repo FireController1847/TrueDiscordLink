@@ -315,6 +315,11 @@ public class DiscordManager {
         return this.sendDiscordMessage(content, false);
     }
 
+    // Checks to see if there is a method of communication to the Discord server
+    public boolean canCommunicateWithDiscord() {
+        return discordlink.getConfig().getBoolean("webhooks.enabled") || (isBotConnected() && discordlink.getConfig().getLongList("bot.from_mc_channels").size() > 0);
+    }
+
     // Sends a message to the Discord server via the bot
     private void sendDiscordBotMessage(String content, boolean blocking, Player player) {
         if (!isBotConnected()) {
