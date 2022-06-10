@@ -286,9 +286,17 @@
             <systemPath>${project.basedir}/all-spigot-nms.jar</systemPath>
         </dependency>
 
-        <!-- 1_18_R2 - 1.18.2 -->
+        <!-- 1_19_R1 - 1.19 -->
         <dependency>
             <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.19-R0.1-SNAPSHOT</version>
+            <classifier>remapped-mojang</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 1_18_R2 - 1.18.2 -->
+        <dependency>
+            <groupId>org.spigotmc.</groupId>
             <artifactId>spigot</artifactId>
             <version>1.18.2-R0.1-SNAPSHOT</version>
             <classifier>remapped-mojang</classifier>
@@ -296,7 +304,7 @@
         </dependency>
         <!-- 1_18_R1 - 1.18.1 -->
         <dependency>
-            <groupId>org.spigotmc.</groupId>
+            <groupId>org.spigotmc..</groupId>
             <artifactId>spigot</artifactId>
             <version>1.18.1-R0.1-SNAPSHOT</version>
             <classifier>remapped-mojang</classifier>
@@ -304,7 +312,7 @@
         </dependency>
 <!--        &lt;!&ndash; 1_17_R1 - 1.17.1 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc...</groupId>-->
+<!--            <groupId>org.spigotmc....</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.17.1-R0.1-SNAPSHOT</version>-->
 <!--            <classifier>remapped-mojang</classifier>-->
@@ -312,105 +320,105 @@
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_16_R3 - 1.16.5 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc....</groupId>-->
+<!--            <groupId>org.spigotmc.....</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.16.5-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_16_R2 - 1.16.3 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc.....</groupId>-->
+<!--            <groupId>org.spigotmc......</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.16.3-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_16_R1 - 1.16.1 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc......</groupId>-->
+<!--            <groupId>org.spigotmc.......</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.16.1-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_15_R1 - 1.15.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc.......</groupId>-->
+<!--            <groupId>org.spigotmc........</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.15.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_14_R1 - 1.14.4 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc........</groupId>-->
+<!--            <groupId>org.spigotmc.........</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.14.4-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_13_R2 - 1.13.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc.........</groupId>-->
+<!--            <groupId>org.spigotmc..........</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.13.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_13_R1 - 1.13 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc..........</groupId>-->
+<!--            <groupId>org.spigotmc...........</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.13-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_12_R1 - 1.12.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc...........</groupId>-->
+<!--            <groupId>org.spigotmc............</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.12.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_11_R1 - 1.11.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc............</groupId>-->
+<!--            <groupId>org.spigotmc.............</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.11.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_10_R1 - 1.10.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc.............</groupId>-->
+<!--            <groupId>org.spigotmc..............</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.10.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_9_R2 - 1.9.4 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc..............</groupId>-->
+<!--            <groupId>org.spigotmc...............</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.9.4-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_9_R1 - 1.9.2 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc...............</groupId>-->
+<!--            <groupId>org.spigotmc................</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.9.2-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_8_R3 - 1.8.8 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc................</groupId>-->
+<!--            <groupId>org.spigotmc.................</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.8.8-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_8_R2 - 1.8.3 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc.................</groupId>-->
+<!--            <groupId>org.spigotmc..................</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.8.3-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash; 1_8_R1 - 1.8 &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>org.spigotmc..................</groupId>-->
+<!--            <groupId>org.spigotmc...................</groupId>-->
 <!--            <artifactId>spigot</artifactId>-->
 <!--            <version>1.8-R0.1-SNAPSHOT</version>-->
 <!--            <scope>provided</scope>-->
