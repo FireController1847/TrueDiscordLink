@@ -61,6 +61,7 @@ public class TrueDiscordLink extends FirePlugin {
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerAdvancementDoneListener(this), this);
+        pluginManager.registerEvents(new CommandListener(this), this);
 
         // If we haven't returned already, it was a success
         return true;
