@@ -144,6 +144,11 @@ public class TrueDiscordLink extends FirePlugin {
             this.getLogger().info("[en.yml] Added commands.relay.success");
             migrated = true;
         }
+        if (!this.getConfig().contains("events.relay_tellraw_messages")) {
+            this.getConfig().set("events.relay_tellraw_messages", true);
+            this.getLogger().info("[config.yml] Added events.relay_tellraw_messages");
+            migrated = true;
+        }
 
         // Save
         if (migrated) {
