@@ -125,7 +125,7 @@ bot:
     commands:
       ip: "Join us at `server.mywebsite.net`"
       website: "Visit our website at https://www.mywebsite.net/"
-      list: "Online Players: %listplayers_in_world_world%"
+      list: "Online Players: %playerlist_online,normal,yes,list%"
       online: "There are currently %server_online% out of %server_max_players% players online."
 
     # Whether or not to auto-update the channel topic for specific channels
@@ -156,19 +156,57 @@ bot:
     roles:
       - "000000000000000000:000000000000000000"
 
+    # A list of options that allow you to notify in a Discord Channel if an account has been unlinked/unlinked
+    notify:
+
+      # A list of options related to notifications when an account has been linked
+      link:
+
+        # Whether the notification is enabled or not
+        enabled: false
+
+        # The id of the channel that will be used to notify of account linking
+        channel: "000000000000000000"
+
+      # A list of options related to notifications when an account has been unlinked
+      unlink:
+
+        # Whether the notification is enabled or not
+        enabled: false
+
+        # The id of the channel that will be used to notify of account unlinking
+        channel: "000000000000000000"
+
 
 ###########################
 #     System Messages     #
 ###########################
-# Messages that will send on the following events. Messages configurable in lang file.
-# Set to false to disable the messages from sending.
+# Messages that will send to the Discord server when the following events occur.
+# The messages themselves are configurable in the lang file.
+# Set to false to disable them from sending.
 events:
+  # Sends a message on server startup
   server_start: true
+
+  # Sends a message on server shutdown
   server_shutdown: true
+
+  # Sends a message when a player joins
   player_join: true
+
+  # Sends a message when a player leaves
   player_quit: true
+
+  # Sends a message when a player dies
   player_death: true
+
+  # Sends a message when a player receives an advancement
   player_advance: true
+
+  # Relays tellraw messages to the Discord server
+  # Only works when targeted at @a (not @e)
+  # Works with command blocks and console
+  relay_tellraw_messages: true
 
 ###################
 #     Tagging     #
@@ -177,10 +215,18 @@ tagging:
   # Whether or not to allow Minecraft users to tag Discord users
   enable_user_tagging: true
 
-  # Enables detection of attempted tags to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
+  # Enables detection of attempted user mentions to convert them to proper Discord mentions. (Ex: @Fire -> <@112732946774962176>)
+  # Minimum of four characters.
   # If enable_user_tagging is enabled, you probably want this enabled to.
   # This only works if bot.enabled is set to true.
   enable_user_tagging_shortcut: true
+
+  # If the shortcut is enabled, whether or not to also attempt to find mentions by looking through the linked accounts database.
+  # For example, if a Minecraft username "ABCD" has linked their account, but their Discord username is "EEEE," typing "@ABCD" will tag "@EEEE."
+  enable_shortcut_use_database: true
+
+  # Whether or not to allow Minecraft users to tag Discord channels
+  enable_channel_tagging: true
 
   # Whether or not to allow Minecraft users to tag Discord roles
   enable_role_tagging: false
@@ -223,3 +269,46 @@ database:
   # The prefix to prepend to all created tables
   table_prefix: "tdl_"
 ```
+
+## Build Requirements
+
+Since TrueDiscordLink uses NMS, you need to have all versions of NMS available.
+
+The easiest way to do this is to use the following GitHub repository, follow its instructions, then copy the final jar to the project, naming it "all-spigot-nms.jar".
+
+https://github.com/Jacxk/all-spigot-nms
+
+If, for whatever reason, this doesn't work, you can comment that out and include all of the following versions via BuildTools:
+
+```
+(Java 8)
+1.8
+1.8.3
+1.8.8
+1.9.2
+1.9.4
+1.10.2
+1.11.2
+1.12.2
+1.13
+1.13.2
+1.14.4
+1.15.2
+1.16.1
+1.16.3
+1.16.5
+
+(Java 16)
+1.17.1
+
+(Java 17)
+1.18.1
+1.18.2
+```
+
+Run BuildTools with the following command for each version:
+```
+java -jar BuildTools.jar --rev <version> --remapped
+```
+
+Depending on your default Java version, you may need to provide the file location to a "java.exe" file instead of just running "java" for some (or most) of the commands.

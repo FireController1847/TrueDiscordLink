@@ -147,15 +147,32 @@ bot:
 ###########################
 #     System Messages     #
 ###########################
-# Messages that will send on the following events. Messages configurable in lang file.
-# Set to false to disable the messages from sending.
+# Messages that will send to the Discord server when the following events occur.
+# The messages themselves are configurable in the lang file.
+# Set to false to disable them from sending.
 events:
+  # Sends a message on server startup
   server_start: true
+
+  # Sends a message on server shutdown
   server_shutdown: true
+
+  # Sends a message when a player joins
   player_join: true
+
+  # Sends a message when a player leaves
   player_quit: true
+
+  # Sends a message when a player dies
   player_death: true
+
+  # Sends a message when a player receives an advancement
   player_advance: true
+
+  # Relays tellraw messages to the Discord server
+  # Only works when targeted at @a (not @e)
+  # Works with command blocks and console
+  relay_tellraw_messages: true
 
 ###################
 #     Tagging     #

@@ -18,7 +18,13 @@
 # Colors are accepted! Use the following character as the prefix: §
 # Hex codes are supported! Use them in the following format: §#000000
 prefix: "[§bDiscordLink§r]"
-no_permission: "§cYou do not have permission to run this command!"
+no_permission: "%prefix% §cYou do not have permission to run this command!"
+no_console_usage: "%prefix% §cYou cannot use this command from console!"
+commands:
+  relay:
+    no_message: "%prefix% §cYou must include a message for me to relay."
+    no_discord_communication: "%prefix% §cThere is no way for me to communicate with Discord! Ensure you have either webhooks enabled or a bot enabled with 'from_mc_channels' configured!"
+    success: "%prefix% Message successfully relayed to the Discord server."
 config:
   error: "%prefix% §cThere was an error loading the configuration!"
   reloaded: "%prefix% Configuration reloaded!"

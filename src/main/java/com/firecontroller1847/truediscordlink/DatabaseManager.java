@@ -115,6 +115,24 @@ public class DatabaseManager {
         }
     }
 
+    // Validates the database's connection and, if there isn't one, reconnects it
+    public void validateConnection() {
+        if (!this.isConnected()) {
+            this.reconnect();
+        }
+    }
+
+    // Reconnects the database
+    public void reconnect() {
+        this.disconnect();
+        new Thread(this::connect).start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // ...
+        }
+    }
+
     // Getters
     public Database getDatabase() {
         return database;

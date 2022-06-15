@@ -36,6 +36,8 @@ permissions:
       truediscordlink.command.reload: true
       truediscordlink.command.link: true
       truediscordlink.command.unlink: true
+      truediscordlink.command.relay: true
+      truediscordlink.command.relaysilent: true
   truediscordlink.tagging.*:
     description: Gives permission to all TrueDiscordLink tagging features
     default: op
@@ -56,6 +58,12 @@ permissions:
   truediscordlink.command.unlink:
     description: Gives permission to unlink a user account
     default: true
+  truediscordlink.command.relay:
+    description: Relays the given message to the Discord server
+    default: op
+  truediscordlink.command.relaysilent:
+    description: Silently relays the given message to the Discord server
+    default: op
 
   # Features
   truediscordlink.tagging.user:
