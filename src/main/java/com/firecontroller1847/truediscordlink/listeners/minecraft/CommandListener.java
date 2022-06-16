@@ -66,7 +66,7 @@ public class CommandListener implements Listener {
                                         BaseComponent component = components[i];
                                         if (component instanceof SelectorComponent) {
                                             List<Entity> entitiesInSelector = sender.getServer().selectEntities(sender, ((SelectorComponent) component).getSelector());
-                                            components[i] = new TextComponent(entitiesInSelector.stream().map(CommandSender::getName).collect(Collectors.joining(" ")));
+                                            components[i] = new TextComponent(entitiesInSelector.stream().map(CommandSender::getName).collect(Collectors.joining(", ")));
                                         }
                                     }
                                 }
