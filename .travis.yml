@@ -1,5 +1,0 @@
-language: java
-script: mvn package
-jdk: [openjdk8]
-matrix:
-  fast_finish: true
