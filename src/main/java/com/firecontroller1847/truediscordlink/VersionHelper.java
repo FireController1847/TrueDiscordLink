@@ -40,6 +40,8 @@ public class VersionHelper {
             advancementHelper = new AdvancementHelper$1_18_R2();
         } else if (version.equals("v1_19_R1")) {
             advancementHelper = new AdvancementHelper$1_19_R1();
+        } else if (version.equals("v1_20_R1")) {
+            advancementHelper = new AdvancementHelper$1_20_R1();
         }  else {
             advancementHelper = new AdvancementHelper$UNSUPPORTED();
         }

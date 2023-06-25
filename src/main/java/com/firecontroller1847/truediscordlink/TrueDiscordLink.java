@@ -31,7 +31,7 @@ public class TrueDiscordLink extends FirePlugin {
 
         // Ensure that we are configured
         if (!this.getConfig().getBoolean("configured")) {
-            this.getLogger().warning("TrueDiscordLink has not been configured! Configure the config.yml file and then reload the plugin.");
+            this.getLogger().severe("TrueDiscordLink has not been configured! Configure the config.yml file and then reload the plugin.");
             return false;
         }
 

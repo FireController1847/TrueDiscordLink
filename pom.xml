@@ -129,9 +129,9 @@
                         <configuration>
                             <inputFile>./target/${project.name}-${build.version}-SHADED.jar</inputFile>
                             <finalName>${project.name}-${build.version}-SHADED-REMAPPED-OBF</finalName>
-                            <srgIn>org.spigotmc:minecraft-server:1.18.2-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
+                            <srgIn>org.spigotmc:minecraft-server:1.20.1-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
                             <reverse>true</reverse>
-                            <remappedDependencies>org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
+                            <remappedDependencies>org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
                             <remappedArtifactAttached>true</remappedArtifactAttached>
                             <remappedClassifierName>remapped-obf</remappedClassifierName>
                         </configuration>
@@ -145,8 +145,8 @@
                         <configuration>
                             <inputFile>./target/${project.name}-${build.version}-SHADED-REMAPPED-OBF.jar</inputFile>
                             <finalName>${project.name}-${build.version}</finalName>
-                            <srgIn>org.spigotmc:minecraft-server:1.18.2-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
-                            <remappedDependencies>org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
+                            <srgIn>org.spigotmc:minecraft-server:1.20.1-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
+                            <remappedDependencies>org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
                         </configuration>
                     </execution>
                 </executions>
@@ -209,7 +209,7 @@
         <dependency>
             <groupId>org.javacord</groupId>
             <artifactId>javacord</artifactId>
-            <version>3.4.0</version>
+            <version>3.8.0</version>
             <scope>compile</scope>
             <type>pom</type>
         </dependency>
@@ -235,6 +235,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.25</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- COMPILE: MariaDB Database Driver -->
