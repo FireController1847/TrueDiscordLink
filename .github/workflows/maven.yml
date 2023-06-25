@@ -27,14 +27,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Cache Maven
-      id: cache-primes
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.m2
-          ~/repository
-        key: ${{ github.job }}-${{ hashFiles('**/pom.xml') }}
     - uses: SpraxDev/Action-SpigotMC@v4
       with:
         versions: 1.20.1, 1.19, 1.18.2, 1.18.1, 1.17.1, 1.16.5, 1.16.3, 1.16.1, 1.15.2, 1.14.4, 1.13.2, 1.13, 1.12.2
