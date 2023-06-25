@@ -1,7 +1,7 @@
 # TrueDiscordLink [![Build Status](https://img.shields.io/travis/com/FireController1847/TrueDiscordLink)](https://travis-ci.com/github/FireController1847/TrueDiscordLink/) [![Latest Release](https://img.shields.io/github/v/release/FireController1847/TrueDiscordLink)](https://github.com/FireController1847/TrueDiscordLink/releases) [![Download](https://img.shields.io/github/downloads/FireController1847/TrueDiscordLink/total?color=%234C1)](https://github.com/FireController1847/TrueDiscordLink/releases) [![Issues](https://img.shields.io/github/issues/FireController1847/TrueDiscordLink)](https://github.com/FireController1847/TrueDiscordLink/issues)
 Provides a link between Discord and your Minecraft server.
 
-[See this plugin on Hangar](https://hangar.papermc.io/FireController1847/TrueDiscordLink)
+[See this plugin on Hangar](https://hangar.papermc.io/FireController1847/TrueDiscordLink)  
 [See this plugin on SpigotMC](https://www.spigotmc.org/resources/truediscordlink.86967/)
 
 ## Commands
