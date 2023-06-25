@@ -21,12 +21,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - uses: SpraxDev/Action-SpigotMC@v4
+      with:
+        versions: 1.20.1, 1.19, 1.18.2, 1.18.1, 1.17.1, 1.16.5, 1.16.3, 1.16.1, 1.15.2, 1.14.4, 1.13.2, 1.13, 1.12.2
+        remapped: true
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
