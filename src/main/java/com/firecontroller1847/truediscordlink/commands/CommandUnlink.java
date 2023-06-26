@@ -87,7 +87,7 @@ public class CommandUnlink extends FireCommand {
             if (plugin.getConfig().getBoolean("bot.linking.notify.unlink.enabled")) {
                 TextChannel channel = ((TrueDiscordLink) plugin).getDiscordManager().getApi().getChannelById(plugin.getConfig().getString("bot.linking.notify.unlink.channel")).orElseThrow(() -> new Exception("Unlink Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Unlink Notification Channel must be a text channel"));
                 channel.sendMessage(plugin.getTranslation("linking.discord.notify.unlink",
-                        new String[] { "%username%", player.getName() },
+                        new String[] { "%name%", player.getName() },
                         new String[] { "%tag%", ((TrueDiscordLink) plugin).getDiscordManager().getApi().getUserById(userId).get().getDiscriminatedName() },
                         new String[] { "%mention%", "<@" + userId + ">"}
                 ));

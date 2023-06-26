@@ -27,7 +27,7 @@ public class PlayerDeathListener implements Listener {
             discordlink.getTranslation("events.player_death", false,
                 new String[] { "%message%", event.getDeathMessage() },
                 new String[] { "%name%", TrueDiscordLink.escapeDiscordFormatting(TrueDiscordLink.stripColorCodes(event.getEntity().getName())) },
-                new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(TrueDiscordLink.stripColorCodes(event.getEntity().getDisplayName())) },
+                new String[] { "%display_name%", TrueDiscordLink.escapeDiscordFormatting(TrueDiscordLink.stripColorCodes(event.getEntity().getDisplayName())) },
                 new String[] { "%uuid%", event.getEntity().getUniqueId().toString() }
             )
         );

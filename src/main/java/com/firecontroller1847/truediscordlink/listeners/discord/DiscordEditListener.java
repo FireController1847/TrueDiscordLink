@@ -26,7 +26,7 @@ public class DiscordEditListener implements MessageEditListener {
         }
 
         // If the message doesn't exist, return
-        Message message = event.getMessage().orElse(null);
+        Message message = event.getMessage();
         if (message == null) {
             return;
         }

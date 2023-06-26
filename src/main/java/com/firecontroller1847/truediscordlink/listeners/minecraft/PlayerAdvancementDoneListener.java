@@ -48,7 +48,7 @@ public class PlayerAdvancementDoneListener implements Listener {
         discordlink.getDiscordManager().sendDiscordMessage(
             discordlink.getTranslation("events.player_advance", false,
                 new String[] { "%name%", event.getPlayer().getName() },
-                new String[] { "%displayName%", event.getPlayer().getDisplayName() },
+                new String[] { "%display_name%", event.getPlayer().getDisplayName() },
                 new String[] { "%uuid%", event.getPlayer().getUniqueId().toString() },
                 new String[] { "%advancement_name%", name },
                 new String[] { "%advancement_description%", description }

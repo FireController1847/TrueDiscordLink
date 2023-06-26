@@ -1,16 +1,16 @@
 # Global Arguments:
 # - %prefix%: The prefix of the plugin
 # - %message%: The content of a message
+# - %display_name%: The display name of a Minecraft player or Discord user
 # - %name%: A raw username for both Minecraft and Discord (no nickname or modifiers)
 #
 # Minecraft Arguments:
-# - %displayName%: The displayName of a player
 # - %uuid%: The UUID of a player
 # - %advancement_name%: The name of a Minecraft advancement
 # - %advancement_description%: The description of a Minecraft advancement
 #
 # Discord Arguments:
-# - %nickname%: The nickname of a user, otherwise the username if no nickname is present
+# - %nickname%: The nickname of a user, otherwise the display name if no nickname is present
 # - %discriminator%: The discriminator of a user
 # - %id%: The ID of a user
 #
@@ -62,5 +62,5 @@ linking:
     no_request: "You do not currently have a request to link your accounts. Make sure to run the `/tdl link` command in Minecraft first!"
     success: "Congratulations! Your Minecraft and Discord accounts are now linked!"
     notify:
-      link: "%username% has linked with %mention%!"
-      unlink: "%username% has unlinked with %mention%!"
+      link: "%name% has linked with %mention%!"
+      unlink: "%name% has unlinked with %mention%!"

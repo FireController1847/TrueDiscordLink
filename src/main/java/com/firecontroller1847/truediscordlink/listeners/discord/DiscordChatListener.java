@@ -98,7 +98,7 @@ public class DiscordChatListener implements MessageCreateListener {
                     if (discordlink.getConfig().getBoolean("bot.linking.notify.link.enabled")) {
                         TextChannel channel = discordlink.getDiscordManager().getApi().getChannelById(discordlink.getConfig().getString("bot.linking.notify.link.channel")).orElseThrow(() -> new Exception("Link Notification Channel cannot be null!")).asTextChannel().orElseThrow(() -> new Exception("Link Notification Channel must be a text channel"));
                         channel.sendMessage(discordlink.getTranslation("linking.discord.notify.link",
-                                new String[] { "%username%", player.getName() },
+                                new String[] { "%name%", player.getName() },
                                 new String[] { "%tag%", message.getAuthor().getDiscriminatedName() },
                                 new String[] { "%mention%", "<@" + message.getAuthor().getIdAsString() + ">"}
                         ));

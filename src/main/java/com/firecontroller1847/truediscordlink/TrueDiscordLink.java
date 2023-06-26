@@ -117,8 +117,8 @@ public class TrueDiscordLink extends FirePlugin {
             migrated = true;
         }
         if (!translations.contains("linking.discord.notify", true)) {
-            translations.set("linking.discord.notify.link", "%username% has linked with %mention%!");
-            translations.set("linking.discord.notify.unlink", "%username% has unlinked with %mention%!");
+            translations.set("linking.discord.notify.link", "%name% has linked with %mention%!");
+            translations.set("linking.discord.notify.unlink", "%name% has unlinked with %mention%!");
             this.getLogger().info("[en.yml] Added linking.discord.notify.*");
             migrated = true;
         }
@@ -147,6 +147,16 @@ public class TrueDiscordLink extends FirePlugin {
         if (!this.getConfig().contains("events.relay_tellraw_messages")) {
             this.getConfig().set("events.relay_tellraw_messages", true);
             this.getLogger().info("[config.yml] Added events.relay_tellraw_messages");
+            migrated = true;
+        }
+
+        // v1.3.0 -> v1.3.3
+        if (Objects.requireNonNull(translations.getString("linking.discord.notify.link")).contains("%username%")) {
+            translations.set("linking.discord.notify.link", this.getTranslation("linking.discord.notify.link", false).replace("%username%", "%name%"));
+            migrated = true;
+        }
+        if (Objects.requireNonNull(translations.getString("linking.discord.notify.unlink")).contains("%username%")) {
+            translations.set("linking.discord.notify.unlink", this.getTranslation("linking.discord.notify.link", false).replace("%username%", "%name%"));
             migrated = true;
         }
 

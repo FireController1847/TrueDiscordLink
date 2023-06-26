@@ -72,7 +72,7 @@ public class DiscordManager {
             if (discordlink.getConfig().getBoolean("bot.enabled")) {
                 new DiscordApiBuilder()
                         .setToken(discordlink.getConfig().getString("bot.token"))
-                        .setIntents(Intent.GUILDS, Intent.GUILD_MESSAGES, Intent.GUILD_MEMBERS, Intent.DIRECT_MESSAGES)
+                        .setIntents(Intent.GUILDS, Intent.GUILD_MESSAGES, Intent.GUILD_MEMBERS, Intent.DIRECT_MESSAGES, Intent.MESSAGE_CONTENT)
                         .login().thenAcceptAsync(api -> {
                     this.api = api;
 
@@ -335,7 +335,7 @@ public class DiscordManager {
                     CompletableFuture<Message> future = channel.sendMessage(TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_bot_format", false,
                         new String[] { "%message%", content },
                         new String[] { "%name%" , TrueDiscordLink.escapeDiscordFormatting(player.getName()) },
-                        new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
+                        new String[] { "%display_name%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
                         new String[] { "%uuid%", player.getUniqueId().toString() }
                     )));
                     if (blocking) {
@@ -373,7 +373,7 @@ public class DiscordManager {
                 this.makeWebhookRequest(url, TrueDiscordLink.stripColorCodes(discordlink.getTranslation("messages.from_mc_webhook_format", false,
                     new String[] { "%message%", content },
                     new String[] { "%name%" , TrueDiscordLink.escapeDiscordFormatting(player.getName()) },
-                    new String[] { "%displayName%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
+                    new String[] { "%display_name%", TrueDiscordLink.escapeDiscordFormatting(player.getDisplayName()) },
                     new String[] { "%uuid%", player.getUniqueId().toString() }
                 )), TrueDiscordLink.stripColorCodes(player.getDisplayName()), skin); // TODO: Why is the username not customizable
             } else {
