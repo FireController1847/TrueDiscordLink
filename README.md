@@ -276,13 +276,17 @@ database:
 Since TrueDiscordLink uses NMS, you need to have all supported versions of NMS available.
 
 
-1) Install [JDK 17 and JDK 8](https://adoptium.net/temurin/releases/).
+1) Install [JDK 21, JDK 17, and JDK 8](https://adoptium.net/temurin/releases/).
 2) Download [BuildTools from Spigot](https://www.spigotmc.org/wiki/buildtools/)
     1) If you're on Windows, I've written a batch script which will run through and build all of the required versions.
         ```batch
         @ECHO OFF
         SET JAVA8_PATH="C:\Program Files\Eclipse Adoptium\jdk-8.0.372.7-hotspot\bin\java.exe"
         SET JAVA17_PATH="C:\Program Files\Eclipse Adoptium\jdk-17.0.7.7-hotspot\bin\java.exe"
+        SET JAVA21_PATH="C:\Program Files\Eclipse Adoptium\jdk-21.0.3.9-hotspot\bin\java.exe"
+        %JAVA21_PATH% -jar BuildTools.jar --rev 1.21 --remapped
+        %JAVA21_PATH% -jar BuildTools.jar --rev 1.20.6 --remapped
+        %JAVA21_PATH% -jar BuildTools.jar --rev 1.20.2 --remapped
         %JAVA17_PATH% -jar BuildTools.jar --rev 1.20.1 --remapped
         %JAVA17_PATH% -jar BuildTools.jar --rev 1.19 --remapped
         %JAVA17_PATH% -jar BuildTools.jar --rev 1.18.2 --remapped
@@ -324,5 +328,10 @@ Since TrueDiscordLink uses NMS, you need to have all supported versions of NMS a
         1.18.2
         1.19
         1.20.1
+       
+       (Java 21)
+       1.20.2
+       1.20.6
+       1.21
         ```
 3) Finally, set the `SERVER_DIRECTORY` environment variable in your IDE to a path to a test server (not the plugins folder, but the server's container folder).

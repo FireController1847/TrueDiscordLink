@@ -11,7 +11,7 @@ public class AdvancementHelper$1_20_R1 implements IAdvancementHelper {
     public String getName(Advancement bukkitAdvancement) {
         try {
             CraftAdvancement advancement = (CraftAdvancement) bukkitAdvancement;
-            return Objects.requireNonNull(advancement.getHandle().getDisplay()).getTitle().getString();
+            return Objects.requireNonNull(advancement.getDisplay()).getTitle();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -22,7 +22,7 @@ public class AdvancementHelper$1_20_R1 implements IAdvancementHelper {
     public String getDescription(Advancement bukkitAdvancement) {
         try {
             CraftAdvancement advancement = (CraftAdvancement) bukkitAdvancement;
-            return Objects.requireNonNull(advancement.getHandle().getDisplay()).getDescription().getString();
+            return Objects.requireNonNull(advancement.getDisplay()).getDescription();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
