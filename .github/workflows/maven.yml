@@ -15,53 +15,94 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  build-spigot:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java-version: [ 8, 17, 21 ]
+    name: Build Spigot (JDK ${{ matrix.java-version }})
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 8
-      uses: actions/setup-java@v3
+    - uses: actions/checkout@v4
+    - name: Setup JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v4
       with:
-        java-version: '8'
-        distribution: 'temurin'
+        java-version: ${{ matrix.java-version }}
+        distribution: "temurin"
         cache: maven
-    - uses: SpraxDev/Action-SpigotMC@v4
+    - name: Build Spigot (JDK 8)
+      if: matrix.java-version == 8
+      uses: SpraxDev/Action-SpigotMC@v5
       with:
         versions: 1.16.5, 1.16.3, 1.16.1, 1.15.2, 1.14.4, 1.13.2, 1.13, 1.12.2
         remapped: true
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - uses: SpraxDev/Action-SpigotMC@v4
+    - name: Build Spigot (JDK 17)
+      if: matrix.java-version == 17
+      uses: SpraxDev/Action-SpigotMC@v5
       with:
         versions: 1.20.1, 1.19, 1.18.2, 1.18.1, 1.17.1
         remapped: true
-    - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-    - uses: SpraxDev/Action-SpigotMC@v4
-        with:
-          versions: 1.21, 1.20.6, 1.20.2
-          remapped: true
+    - name: Build Spigot (JDK 21)
+      if: matrix.java-version == 21
+      uses: SpraxDev/Action-SpigotMC@v5
+      with:
+        versions: 1.21, 1.20.6, 1.20.4, 1.20.2
+        remapped: true
+    - name: Archive Maven Repository
+      run: tar -czf maven-repo-${{ matrix.java-version }}.tar.gz -C ~/.m2/repository .
+    - name: Upload Maven Repository
+      uses: actions/upload-artifact@v4
+      with:
+        name: maven-repo-${{ matrix.java-version }}
+        path: maven-repo-${{ matrix.java-version }}.tar.gz
+
+  build-maven:
+    runs-on: ubuntu-latest
+    needs: build-spigot
+    name: Build
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: 21
+        distribution: "temurin"
+        cache: maven
+    - name: Download Maven Repositories (JDK 8)
+      uses: actions/download-artifact@v4
+      with:
+        name: maven-repo-8
+        path: ~/
+    - name: Download Maven Repositories (JDK 17)
+      uses: actions/download-artifact@v4
+      with:
+        name: maven-repo-17
+        path: ~/
+    - name: Download Maven Repositories (JDK 21)
+      uses: actions/download-artifact@v4
+      with:
+        name: maven-repo-21
+        path: ~/
+    - name: Display structure of home
+      run: ls -R ~/
+    - name: Extract Maven Repositories
+      run: |
+        mkdir -p ~/.m2/repository
+        tar -xzf ~/maven-repo-8.tar.gz -C ~/.m2/repository/
+        tar -xzf ~/maven-repo-17.tar.gz -C ~/.m2/repository/
+        tar -xzf ~/maven-repo-21.tar.gz -C ~/.m2/repository/
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Cache Maven
       id: cache-primes
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.m2
           ~/repository
         key: ${{ github.job }}-${{ hashFiles('**/pom.xml') }}
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+    - name: Delete Maven Artifacts
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: |
+          maven-repo-*
+        failOnError: false
