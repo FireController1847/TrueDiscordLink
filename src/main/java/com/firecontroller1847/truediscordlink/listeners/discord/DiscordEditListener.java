@@ -33,11 +33,11 @@ public class DiscordEditListener implements MessageEditListener {
 
         // If the message is older than 2 minutes, ignore
         try {
-            if (message.getLastEditTimestamp().orElseThrow(() -> new Exception("Last edit timestamp cannot be null for message edit event!")).toEpochMilli() - message.getCreationTimestamp().toEpochMilli() > 120000) {
+            if (!message.getLastEditTimestamp().isPresent() || message.getLastEditTimestamp().get().toEpochMilli() - message.getCreationTimestamp().toEpochMilli() > 120000) {
                 return;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
             return;
         }
 
