@@ -95,6 +95,7 @@ jobs:
     - name: Cache Maven
       id: cache-primes
       uses: actions/cache@v4
+      if: always()
       with:
         path: |
           ~/.m2
@@ -102,6 +103,7 @@ jobs:
         key: ${{ github.job }}-${{ hashFiles('**/pom.xml') }}
     - name: Delete Maven Artifacts
       uses: geekyeggo/delete-artifact@v5
+      if: always()
       with:
         name: |
           maven-repo-*
